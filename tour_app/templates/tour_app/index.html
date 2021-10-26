@@ -1,5 +1,26 @@
-{% load static %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'tour_app/style.css' %}">
-
-<h1> Hello World </h>
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <title>History on the Go</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'tour_app/style.css' %}">
+    <script src="{% static "tour_app/google_map.js" %}"></script> 
+  </head>
+  <body>
+    <!--Search Results sidebar-->
+    <div id="container">
+      <div id="map"></div>
+      <div id="sidebar">
+        <h2>Results</h2>
+        <ul id="places"></ul>
+      </div>
+    </div>
+    <!--Search box-->
+    <input id="map-input" class="controls" type="text" placeholder="Enter Search address"/>
+    <!--Displays google maps-->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+  </body>
+</html>
