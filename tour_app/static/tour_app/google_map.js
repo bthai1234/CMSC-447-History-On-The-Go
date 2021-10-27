@@ -6,8 +6,9 @@ let bounds;
 var placesList = [];//Stores the array of locations returned from the google maps API
 var markerList = [];//Stores the list of markers that have been placed on the map
 var resultList = [];//Stores the list of HTML <li> list elements shown in the sidebar result list with id = 'places'  
-var search_radus = '10000';//default value
+var search_radus = '25000';//default value
 var searchlocation;
+
 
 function initMap() {
   //initialize the base map from google map api.
@@ -18,15 +19,15 @@ function initMap() {
     mapId: "b93bdcaff9612ab5",
   });
 
-  // Create the places service.
-  service = new google.maps.places.PlacesService(map);
+  service = new google.maps.places.PlacesService(map); // Create the places service.
 
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
-  const input = document.getElementById("map-input");
-  const searchBox = new google.maps.places.SearchBox(input);
+  const input_container = document.getElementById("input_container");
+  const input_address = document.getElementById("map-input-address");
+  const searchBox = new google.maps.places.SearchBox(input_address);
 
   //Adds Search box to to the map bounds. Comment out if you want the placment else where 
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(input_container);
   map.addListener("bounds_changed", () => {
     searchBox.setBounds(map.getBounds());
   });
@@ -34,29 +35,34 @@ function initMap() {
   //event Listener for the search box when the user selects a search prediction and
   //clears out the markers on the map and clears the makreList and placesList array and
   //calls the google maps api for a new search 
-  searchBox.addListener("places_changed", () => {
-    //retrieves the search 
-    var places = searchBox.getPlaces(); 
-    searchlocation = places[0].geometry.location;
+  document.getElementById("search_figure").addEventListener("click", function() {
+    var place = searchBox.getPlaces(); //retrieves the search
+    searchlocation = place[0].geometry.location;
 
-    //clean up previous search if any
-    // Deletes markers on the map from previous search result.
-    markerList.forEach((marker) => {
-      marker.setMap(null);
-    });
-    //clear out sidebar search results
-    while(resultList.firstChild){
-      resultList.removeChild(resultList.firstChild);
-    }
-    resultList = [];
-    markerList = [];
-    placesList = [];
+    cleanUp();//clears data from previous search
 
-    //calls the getPlaces function with multiple keyword strings, which will call the google maps api
-    getPlaces("historical location", searchlocation, search_radus);
-    getPlaces("historical", searchlocation, search_radus);
-    getPlaces("museum", searchlocation, search_radus);
+    loadMapMarkersAndPlaces();
   });
+}
+
+//calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
+async function loadMapMarkersAndPlaces(){
+
+  var input_figure = document.getElementById("map-input-Figure").value;
+
+  //perform multiple searches with diffrent keywords, and combine each result
+  results = await getPlaces(input_figure + " historical", searchlocation, search_radus); 
+  placesList = results;
+  results = await getPlaces(input_figure + " museum", searchlocation, search_radus); 
+  placesList = concatResults(placesList, results);
+
+  //If no search results are matched do nothing.
+  if(placesList.length == 0){
+    return;
+  }
+  
+  addMarkers(placesList, map); //adds all markers to the map
+  addPlacesToResultSidebar(placesList); //add location names to the sidebar result list if one is defined in the HTML with the <ul id="places"></ul> tag
 }
 
 //keyword search string, location takes google api location object(lat and long), radius in meters.
@@ -67,19 +73,20 @@ function getPlaces(searchKeyword, searchLocation, searchRadius){
     keyword: searchKeyword,
   };
 
-  //Defines a new bounding box for the map
-  bounds = new google.maps.LatLngBounds();
-  
-  service.nearbySearch(request, (results, status) => { 
-    if (status !== "OK" || !results)return;
-    placesList = results;
-    addMarkers(results, map);
+  return new Promise((resolve, reject) => {
+    service.nearbySearch(request, (results, status) => { 
+      if (status == google.maps.places.PlacesServiceStatus.OK || results){
+        resolve(results);
+      }else{
+        reject(status);
+      }
+    });
   });
 }
 
 //takes a list of locations returned by the google maps api and the map object  
 function addMarkers(places, map) {
-  //add specific marker for search position
+  //add specific special marker icon for search position
   const icon = { 
     url: "../../static/tour_app/images/map_home.png",
     scaledSize: new google.maps.Size(40, 40),
@@ -92,39 +99,27 @@ function addMarkers(places, map) {
     animation: google.maps.Animation.DROP,
     position: searchlocation,
   });
-  //adds marker to marker array
-  markerList.push(marker);
+
+  markerList.push(marker); //adds marker to marker array
 
   for (const place of places) {
     if (place.geometry && place.geometry.location) {
-      //first check if marker was already added berfore adding marker to map and to sidebar list.
-      if(!containsMarker(place)){
-        //creates new marker and adds to map
-        const marker = new google.maps.Marker({
+      if(!containsMarker(place, markerList)){ //first check if marker was already added berfore adding marker to map 
+        const marker = new google.maps.Marker({ //creates new marker and adds to map
           map,
           title: place.name,
           animation: google.maps.Animation.DROP,
           position: place.geometry.location,
         });
-        //adds marker to marker array
-        markerList.push(marker);
 
-        //keeps track of marker bounds to zoom map out if needed
+        markerList.push(marker); //adds marker to marker array
+
+        //checks marker bounds to zoom map out if needed
         if (place.geometry.viewport) {
           bounds.union(place.geometry.viewport);
         } else {
           bounds.extend(place.geometry.location);
         }
-
-        //adds each location name to the sidebar in a HTML tag <li> with id="li". In a unordered list <ul> with id='places'. And store access to them in the array resultList  
-        resultList = document.getElementById("places");
-        const li = document.createElement("li");
-        li.textContent = place.name;
-        resultList.appendChild(li);
-        li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
-          map.setCenter(place.geometry.location);
-          map.zoom(30);
-        });
       }
 
     }else{
@@ -132,16 +127,75 @@ function addMarkers(places, map) {
       return;
     }
   }
-  //zoom map out or in based on the markers placed
-  map.fitBounds(bounds);
+  map.fitBounds(bounds);   //zoom map out or in based on the markers placed
+}
+
+//Param: places - array of locations returned by google maps api
+//if there is a sidebar defined in the HTML with a <ul id="places"></ul> tag, to display a list of the results, add the names of the given locations to the sidebar  
+function addPlacesToResultSidebar(places){
+  if(document.getElementById("places")){
+    for (const place of places) {
+      if (place.geometry && place.geometry.location) {
+        resultList = document.getElementById("places");
+        const li = document.createElement("li");
+        li.textContent = place.name;
+        resultList.appendChild(li);
+        li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
+          map.setCenter(place.geometry.location);
+          //TODO zoom in?
+        });
+      }
+    }
+  }
+  return resultList;
 }
 
 //compares the name of a google maps place object and a markers title which contains the name of its location. returns true if the name matches, otherwise false  
-function containsMarker(place){
+function containsMarker(place, markerList){
   for (const obj of markerList){
-    if(place.name === obj.title){
+    if(place.name == obj.title){
       return true;
     }
   }
   return false;
+}
+
+//checks if A place list contains a specific loctation obj, by comparing names
+function placeListHas(place, placesList){
+  for(const obj of placesList){
+    if(place.name == obj.name){
+      return true
+    }
+  }
+  return false;
+}
+
+//combines two placelist 
+function concatResults(placesListA, placesListB){
+  var result = placesListA;
+  for(const placeB of placesListB){
+    if(!placeListHas(placeB, placesListA)){
+      result.push(placeB);
+    }
+  }
+
+  return result;
+}
+
+//clears the markers on the map and the result list and the arrays storing the locations, markers, and result list, 
+function cleanUp(){
+  //clean up previous search if any
+  // Deletes markers on the map from previous search result.
+  markerList.forEach((marker) => {
+    marker.setMap(null);
+  });
+  //clear out sidebar search results
+  while(resultList.firstChild){
+    resultList.removeChild(resultList.firstChild);
+  }
+  resultList = [];
+  markerList = [];
+  placesList = [];
+  //Defines a new bounding box for the map
+  bounds = new google.maps.LatLngBounds();
 }

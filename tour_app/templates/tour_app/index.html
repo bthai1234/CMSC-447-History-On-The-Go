@@ -14,9 +14,14 @@
         <h2>Results</h2>
         <ul id="places"></ul>
       </div>
+      <!--Search box-->
+      <div id ="input_container">
+        <input id="map-input-Figure" class="controls" type="text" placeholder="Enter Historical Figure"/>
+        <input id="map-input-address" class="controls" type="text" placeholder="Enter Search Address"/>
+        <input id="search_figure" type="button" value="Search Based on Historical Figure">
+      </div>
     </div>
-    <!--Search box-->
-    <input id="map-input" class="controls" type="text" placeholder="Enter Search address"/>
+
     <!--Displays google maps-->
     <script
       src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
