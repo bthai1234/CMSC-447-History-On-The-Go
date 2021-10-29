@@ -7,62 +7,99 @@ var placesList = [];//Stores the array of locations returned from the google map
 var markerList = [];//Stores the list of markers that have been placed on the map
 var resultList = [];//Stores the list of HTML <li> list elements shown in the sidebar result list with id = 'places'  
 var search_radus = '25000';//default value
-var searchlocation;
-
 
 function initMap() {
   //initialize the base map from google map api.
-  searchlocation = { lat: 39.290385, lng: -76.612189 }; //default location baltimore eventual todo: gett location based on user gps  
+  var searchlocation = { lat: 39.290385, lng: -76.612189 }; //default location baltimore eventual todo: gett location based on user gps  
+  if(!document.getElementById("map")){ throw new Error('HTML element with id = map not found');}
   map = new google.maps.Map(document.getElementById("map"), {
     center: searchlocation,
     zoom: 15,
-    mapId: "b93bdcaff9612ab5",
+    mapId: "8d193001f940fde3", //b93bdcaff9612ab5
   });
 
   service = new google.maps.places.PlacesService(map); // Create the places service.
 
+  try{
+    getSearchBox();
+  }catch(e){
+    throw new Error(e);
+  }
+}
+
+function getSearchBox(){
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
-  const input_container = document.getElementById("input_container");
-  const input_address = document.getElementById("map-input-address");
-  const searchBox = new google.maps.places.SearchBox(input_address);
+  var input_address;
+  var searchBox;
+  if(document.getElementById("map-input-address")){
+    input_address = document.getElementById("map-input-address");
+    searchBox = new google.maps.places.SearchBox(input_address);
+  }else{
+    throw new Error('Text box with HTML id = map-input-address not found');
+  }
 
-  //Adds Search box to to the map bounds. Comment out if you want the placment else where 
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(input_container);
-  map.addListener("bounds_changed", () => {
-    searchBox.setBounds(map.getBounds());
-  });
-
-  //event Listener for the search box when the user selects a search prediction and
-  //clears out the markers on the map and clears the makreList and placesList array and
-  //calls the google maps api for a new search 
+  //event Listener for the button with id search_figure and
+  //gets the values in the search box and
+  //calls the loadMapMarkersAndPlaces() 
+  if(!document.getElementById("map-input-Figure")){throw new Error('HTML Button element with HTML id = search_figure not found');}
   document.getElementById("search_figure").addEventListener("click", function() {
-    var place = searchBox.getPlaces(); //retrieves the search
-    searchlocation = place[0].geometry.location;
+    var searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
+    if(document.getElementById("map-input-Figure")){
+      var input_figure = document.getElementById("map-input-Figure").value;
+    }else{
+      throw new Error('Text box with HTML id = map-input-Figure not found');
+    }
 
-    cleanUp();//clears data from previous search
-
-    loadMapMarkersAndPlaces();
+    try{
+      loadMapMarkersAndPlaces(searchlocation, input_figure);
+    }catch(e){
+      throw new Error(e);
+    }
   });
+  return 0;
 }
 
 //calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
-async function loadMapMarkersAndPlaces(){
-
-  var input_figure = document.getElementById("map-input-Figure").value;
-
+async function loadMapMarkersAndPlaces(searchlocation, input_figure){
+  cleanUp();//clears data from previous search
+ 
   //perform multiple searches with diffrent keywords, and combine each result
-  results = await getPlaces(input_figure + " historical", searchlocation, search_radus); 
-  placesList = results;
-  results = await getPlaces(input_figure + " museum", searchlocation, search_radus); 
-  placesList = concatResults(placesList, results);
+  await getPlaces(input_figure + " historical", searchlocation, search_radus).then(function(results){
+    placesList = results;
+  }, function(err){
+    throw new Error(err);
+  });
+  await getPlaces(input_figure + " museum", searchlocation, search_radus).then(function(results){
+    placesList = concatResults(placesList, results);
+  }, function(err){
+    throw new Error(err);
+  });
 
-  //If no search results are matched do nothing.
+
+  //If no search results are matched return 1.
   if(placesList.length == 0){
-    return;
+    console.log("No results found");
+    return 1;
   }
   
   addMarkers(placesList, map); //adds all markers to the map
   addPlacesToResultSidebar(placesList); //add location names to the sidebar result list if one is defined in the HTML with the <ul id="places"></ul> tag
+  
+  //add specific special marker icon for original search position
+  const icon = { 
+    url: "../../static/tour_app/images/map_home.png",
+    scaledSize: new google.maps.Size(40, 40),
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(0, 40),
+  };
+  const marker = new google.maps.Marker({
+    map,
+    icon: icon,
+    animation: google.maps.Animation.DROP,
+    position: searchlocation,
+  });
+  markerList.push(marker); //adds marker to marker array
+  return 0;
 }
 
 //keyword search string, location takes google api location object(lat and long), radius in meters.
@@ -78,30 +115,15 @@ function getPlaces(searchKeyword, searchLocation, searchRadius){
       if (status == google.maps.places.PlacesServiceStatus.OK || results){
         resolve(results);
       }else{
-        reject(status);
+        //console.error(status);
+        reject(Error(status));
       }
     });
   });
 }
 
-//takes a list of locations returned by the google maps api and the map object  
+//takes a list of locations returned by the google maps api for the first parameter and a refrence to the map object in the second and adds markers to the map    
 function addMarkers(places, map) {
-  //add specific special marker icon for search position
-  const icon = { 
-    url: "../../static/tour_app/images/map_home.png",
-    scaledSize: new google.maps.Size(40, 40),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(0, 40),
-  };
-  const marker = new google.maps.Marker({
-    map,
-    icon: icon,
-    animation: google.maps.Animation.DROP,
-    position: searchlocation,
-  });
-
-  markerList.push(marker); //adds marker to marker array
-
   for (const place of places) {
     if (place.geometry && place.geometry.location) {
       if(!containsMarker(place, markerList)){ //first check if marker was already added berfore adding marker to map 
@@ -123,11 +145,12 @@ function addMarkers(places, map) {
       }
 
     }else{
-      console.log("Returned place contains no geometry");
-      return;
+      //console.log("Returned place contains no geometry");
+      throw new Error("A location in the places list doesn't contain location data.");
     }
   }
   map.fitBounds(bounds);   //zoom map out or in based on the markers placed
+  return 0;
 }
 
 //Param: places - array of locations returned by google maps api
@@ -142,10 +165,14 @@ function addPlacesToResultSidebar(places){
         resultList.appendChild(li);
         li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
           map.setCenter(place.geometry.location);
-          //TODO zoom in?
+          map.setZoom(15);
         });
+      }else{
+        throw new Error("A location in the places list doesn't contain location data.");
       }
     }
+  }else{
+    throw new Error('HTML ul list element with id = places  not found ');
   }
   return resultList;
 }
@@ -160,7 +187,7 @@ function containsMarker(place, markerList){
   return false;
 }
 
-//checks if A place list contains a specific loctation obj, by comparing names
+//checks if A array contains a specific loctation obj, by comparing names
 function placeListHas(place, placesList){
   for(const obj of placesList){
     if(place.name == obj.name){
@@ -170,7 +197,7 @@ function placeListHas(place, placesList){
   return false;
 }
 
-//combines two placelist 
+//combines two arrays that contain google maps api location data 
 function concatResults(placesListA, placesListB){
   var result = placesListA;
   for(const placeB of placesListB){
@@ -196,6 +223,8 @@ function cleanUp(){
   resultList = [];
   markerList = [];
   placesList = [];
+  search_radus = '25000';
+
   //Defines a new bounding box for the map
   bounds = new google.maps.LatLngBounds();
 }

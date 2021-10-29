@@ -4,6 +4,11 @@
     {% load static %}
     <title>History on the Go</title>
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/style.css' %}">
+    <!--Displays google maps-->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
     <script src="{% static "tour_app/google_map.js" %}"></script> 
   </head>
   <body>
@@ -11,21 +16,17 @@
     <div id="container">
       <div id="map"></div>
       <div id="sidebar">
+        <!--Search box-->
+        <div id ="input_container">
+          <input id="map-input-Figure" class="controls" type="text" placeholder="Enter Historical Figure"/>
+          <input id="map-input-address" class="controls" type="text" placeholder="Enter Search Address"/>
+          <input id="search_figure" type="button" value="Search Based on Historical Figure">
+        </div>
         <h2>Results</h2>
         <ul id="places"></ul>
       </div>
-      <!--Search box-->
-      <div id ="input_container">
-        <input id="map-input-Figure" class="controls" type="text" placeholder="Enter Historical Figure"/>
-        <input id="map-input-address" class="controls" type="text" placeholder="Enter Search Address"/>
-        <input id="search_figure" type="button" value="Search Based on Historical Figure">
-      </div>
     </div>
 
-    <!--Displays google maps-->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
+
   </body>
 </html>
