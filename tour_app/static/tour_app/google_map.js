@@ -29,17 +29,17 @@ function initMap() {
 
 function getSearchBox(){
   if(!document.getElementById("map-input-address")){throw new Error('Text box with HTML id = map-input-address not found');}
-  if(!document.getElementById("search_figure")){throw new Error('HTML Button element with HTML id = search_figure not found');}
+  if(!document.getElementById("searchSubmitButton")){throw new Error('HTML Button element with HTML id = searchSubmitButton not found');}
   if(!document.getElementById("map-input-Figure")){throw new Error('Text box with HTML id = map-input-Figure not found');}
   
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
   var input_address = document.getElementById("map-input-address");
   var searchBox = new google.maps.places.SearchBox(input_address);
 
-  //event Listener for the button with id search_figure and
+  //event Listener for the button with id searchSubmitButton and
   //gets the values in the search box and
   //calls the loadMapMarkersAndPlaces() 
-  document.getElementById("search_figure").addEventListener("click", function() {
+  document.getElementById("searchSubmitButton").addEventListener("click", function() {
     var searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
     var input_figure = document.getElementById("map-input-Figure").value;
 
