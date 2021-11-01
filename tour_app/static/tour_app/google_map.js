@@ -28,27 +28,20 @@ function initMap() {
 }
 
 function getSearchBox(){
+  if(!document.getElementById("map-input-address")){throw new Error('Text box with HTML id = map-input-address not found');}
+  if(!document.getElementById("search_figure")){throw new Error('HTML Button element with HTML id = search_figure not found');}
+  if(!document.getElementById("map-input-Figure")){throw new Error('Text box with HTML id = map-input-Figure not found');}
+  
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
-  var input_address;
-  var searchBox;
-  if(document.getElementById("map-input-address")){
-    input_address = document.getElementById("map-input-address");
-    searchBox = new google.maps.places.SearchBox(input_address);
-  }else{
-    throw new Error('Text box with HTML id = map-input-address not found');
-  }
+  var input_address = document.getElementById("map-input-address");
+  var searchBox = new google.maps.places.SearchBox(input_address);
 
   //event Listener for the button with id search_figure and
   //gets the values in the search box and
   //calls the loadMapMarkersAndPlaces() 
-  if(!document.getElementById("map-input-Figure")){throw new Error('HTML Button element with HTML id = search_figure not found');}
   document.getElementById("search_figure").addEventListener("click", function() {
     var searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
-    if(document.getElementById("map-input-Figure")){
-      var input_figure = document.getElementById("map-input-Figure").value;
-    }else{
-      throw new Error('Text box with HTML id = map-input-Figure not found');
-    }
+    var input_figure = document.getElementById("map-input-Figure").value;
 
     try{
       loadMapMarkersAndPlaces(searchlocation, input_figure);
@@ -56,7 +49,12 @@ function getSearchBox(){
       throw new Error(e);
     }
   });
-  return 0;
+
+  var inputs = {
+    address: document.getElementById("map-input-address"),
+    figure: document.getElementById("map-input-Figure")
+  }
+  return inputs;
 }
 
 //calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
@@ -150,30 +148,29 @@ function addMarkers(places, map) {
     }
   }
   map.fitBounds(bounds);   //zoom map out or in based on the markers placed
-  return 0;
+  return markerList;
 }
 
 //Param: places - array of locations returned by google maps api
 //if there is a sidebar defined in the HTML with a <ul id="places"></ul> tag, to display a list of the results, add the names of the given locations to the sidebar  
 function addPlacesToResultSidebar(places){
-  if(document.getElementById("places")){
-    for (const place of places) {
-      if (place.geometry && place.geometry.location) {
-        resultList = document.getElementById("places");
-        const li = document.createElement("li");
-        li.textContent = place.name;
-        resultList.appendChild(li);
-        li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
-          map.setCenter(place.geometry.location);
-          map.setZoom(15);
-        });
-      }else{
-        throw new Error("A location in the places list doesn't contain location data.");
-      }
+  if(!document.getElementById("places")){throw new Error('HTML ul list element with id = places  not found ');}
+
+  for (const place of places) {
+    if (place.geometry && place.geometry.location) {
+      resultList = document.getElementById("places");
+      const li = document.createElement("li");
+      li.textContent = place.name;
+      resultList.appendChild(li);
+      li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
+        map.setCenter(place.geometry.location);
+        map.setZoom(15);
+      });
+    }else{
+      throw new Error("A location in the places list doesn't contain location data.");
     }
-  }else{
-    throw new Error('HTML ul list element with id = places  not found ');
   }
+
   return resultList;
 }
 
