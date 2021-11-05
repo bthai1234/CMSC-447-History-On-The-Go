@@ -53,8 +53,8 @@ class HistoricalLocation(models.Model):
     """
     loc_name = models.CharField(max_length=100)
     loc_address = models.CharField(max_length=200)
-    latitude = models.DecimalField(max_digits=2, decimal_places=15, unique=True)
-    longitude = models.DecimalField(max_digits=3, decimal_places=15, unique=True)
+    latitude = models.DecimalField(max_digits=17, decimal_places=15, unique=True)
+    longitude = models.DecimalField(max_digits=18, decimal_places=15, unique=True)
     description = models.TextField()
     operation_hours = models.TimeField()
     pictures = models.BinaryField() 
