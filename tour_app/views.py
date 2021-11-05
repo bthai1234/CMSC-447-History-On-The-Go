@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 
 
+# Create your views here.
 def registerPage(request):
     regis_form = RegisterUserForm()
     context = {'regis_form': regis_form}
@@ -36,8 +37,6 @@ def loginPage(request):
     context = {}
     return render(request, 'tour_app/loginPage.html', context)
 
-
-# Create your views here.
 def index(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the .env file 
     return render(request, 'tour_app/index.html', context)
