@@ -45,11 +45,16 @@ class HistoricalLocation(models.Model):
         - description (TEXT)
         - operation_hours (TIME)
         - pictures (BLOB)
+
+    Notes:
+        - latitude ranges from -90 - 90
+        - longitude ranges from -180 to 80
+        - both can store up to 15 decimal numbers 
     """
     loc_name = models.CharField(max_length=100)
     loc_address = models.CharField(max_length=200)
-    latitude = models.DecimalField(unique=True)
-    longitude = models.DecimalField(unique=True)
+    latitude = models.DecimalField(max_digits=2, decimal_places=15, unique=True)
+    longitude = models.DecimalField(max_digits=3, decimal_places=15, unique=True)
     description = models.TextField()
     operation_hours = models.TimeField()
     pictures = models.BinaryField() 
