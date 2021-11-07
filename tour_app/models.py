@@ -10,13 +10,11 @@ class Itinerary(models.Model):
         - itinerary_name (NOT NULL)
         - locations (need another table for locations)
     """
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
-        primary_key=True
     )
     itinerary_name = models.CharField(max_length=100)
-    # location = models.ForeignKey()
 
 
 class UserLocation(models.Model):
