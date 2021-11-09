@@ -3,12 +3,17 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
+
+from tour_app.models import Itinerary
 from .forms import RegisterUserForm
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
+from tour_app.models import Itinerary, Itinerary_location
+from django.contrib.auth import get_user_model
+import logging
 
 
 # Create your views here.
@@ -19,6 +24,10 @@ def registerPage(request):
         regis_form = RegisterUserForm(request.POST)
         if regis_form.is_valid():
             regis_form.save()
+            var_username = request.POST['username']
+            user = get_user_model().objects.get(username=var_username)
+            new_itinerary = Itinerary(user_id=user.id, itinerary_name='Default')
+            new_itinerary.save()
             return HttpResponseRedirect(reverse('tour_app:loginPage'))
     return render(request, 'tour_app/registerPage.html', context)
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -11,10 +12,29 @@ class Itinerary(models.Model):
         - locations (need another table for locations)
     """
     user = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
     )
     itinerary_name = models.CharField(max_length=100)
+
+class Itinerary_location(models.Model):
+    """Holds the locations of a given itinerary 
+
+    Attributes:
+        - id (PRIMARY KEY)
+        - itinerary_id
+        - location_name (NOT NULL) 
+        - latitude (REAL UNIQUE NOT NULL)
+        - longitude (REAL UNIQUE NOT NULL)       
+    """
+    itinerary = models.ForeignKey(
+        Itinerary, 
+        on_delete=models.CASCADE, 
+    )
+    loc_name = models.CharField(max_length=100)
+    latitude = models.DecimalField(max_digits=17, decimal_places=15)
+    longitude = models.DecimalField(max_digits=18, decimal_places=15)
+
 
 
 class UserLocation(models.Model):
@@ -25,7 +45,7 @@ class UserLocation(models.Model):
         - address (NOT NULL)
     """
     user = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE
     )
     address = models.CharField(max_length=200)
