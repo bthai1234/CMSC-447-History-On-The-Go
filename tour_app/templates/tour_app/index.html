@@ -4,6 +4,7 @@
     {% load static %}
     <title>History on the Go</title>
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--Displays google maps-->
     <script
       src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
@@ -23,8 +24,11 @@
           <input id="searchSubmitButton" type="button" value="Search Based on Historical Figure">
         </div>
         <h2>Results</h2>
-        <ul id="places"></ul>
+        <div id="places" class="places_list">
+        {% csrf_token %}
+        </div>
       </div>
     </div>
+  </body>
 
 

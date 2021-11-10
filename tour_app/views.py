@@ -26,7 +26,7 @@ def registerPage(request):
             regis_form.save()
             var_username = request.POST['username']
             user = get_user_model().objects.get(username=var_username)
-            new_itinerary = Itinerary(user_id=user.id, itinerary_name='Default')
+            new_itinerary = Itinerary(user_id=user.id, itinerary_name= (var_username + ' itinerary'))
             new_itinerary.save()
             return HttpResponseRedirect(reverse('tour_app:loginPage'))
     return render(request, 'tour_app/registerPage.html', context)

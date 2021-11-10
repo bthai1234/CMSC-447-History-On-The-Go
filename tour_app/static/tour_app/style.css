@@ -21,6 +21,29 @@ body {
   flex-direction: column;
 }
 
+#places{
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.place_div {
+  border-radius: 25px;
+  border: 2px solid #000000;
+  padding: 20px;
+  margin-bottom: 3px;
+}
+
+.placeDiv, .place_form, p{
+  margin: 0px;
+  padding: 0px;
+}
+
+
+div.places_list>div:nth-of-type(odd) {
+  background: #e0e0e0;
+}
+
 #map {
   flex-basis: 0;
   flex-grow: 4;

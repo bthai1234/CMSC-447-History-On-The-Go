@@ -155,22 +155,58 @@ function addMarkers(places, map) {
 //if there is a sidebar defined in the HTML with a <ul id="places"></ul> tag, to display a list of the results, add the names of the given locations to the sidebar  
 function addPlacesToResultSidebar(places){
   if(!document.getElementById("places")){throw new Error('HTML ul list element with id = places  not found ');}
+  
+  $(document).ready(function() {
+    for (const place of places) {
+      if (place.geometry && place.geometry.location) {
+        /*resultList = document.getElementById("places");
+        const li = document.createElement("li");
+        li.setAttribute("id", place.name);
+        li.textContent = place.name;
+        resultList.appendChild(li);
+        li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
+          map.setCenter(place.geometry.location);
+          map.setZoom(15);
+        });*/
+        resultList = document.getElementById("places");
+        
+        var place_lat = place.geometry.location.lat;
+        var place_lng = place.geometry.location.lng;
+        var csrftoken = getCookie('csrftoken');
+        
+        var placeDiv = $(document.createElement('div')).attr({'class':'place_div'});
+        var placeTitle = $(document.createElement('p')).attr({"class":"placeName"});
+        placeTitle.text(place.name);
+        var saveForm = $(document.createElement('form')).attr({'class':'place_form', "action":"\\", "method":"post"});
+        var csrftoken = $(document.createElement('input')).attr({"name":"csrfmiddlewaretoken", "type":"hidden", "value":csrftoken, 'readonly':true});
+        var placeName = $(document.createElement('input')).attr({'class':'place_name', "name":"place_name", "type":"hidden", "value":place.name, 'readonly':true});
+        var placeLat = $(document.createElement('input')).attr({'class':'place_lat', "name":"place_lat", "type":"hidden", "value":place_lat, 'readonly':true});
+        var placeLng = $(document.createElement('input')).attr({'class':'place_lng', "name":"place_lng", "type":"hidden", "value":place_lng, 'readonly':true});
+        var submitButton = $(document.createElement('input')).attr({"class":"place_submit", "type":"submit", "value":"Save to Itinerary"});
+        
+        saveForm.append(csrftoken,placeName,placeLat,placeLng,submitButton);
+        placeDiv.append(placeTitle,saveForm);
 
-  for (const place of places) {
-    if (place.geometry && place.geometry.location) {
-      resultList = document.getElementById("places");
-      const li = document.createElement("li");
-      li.textContent = place.name;
-      resultList.appendChild(li);
-      li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
-        map.setCenter(place.geometry.location);
-        map.setZoom(15);
-      });
-    }else{
-      throw new Error("A location in the places list doesn't contain location data.");
+        
+        $("#places").append(placeDiv);
+        placeDiv.click(function(){
+          map.setCenter(place.geometry.location);
+          map.setZoom(15);
+        });
+        placeDiv.hover(function(){
+          $(this).css('cursor','pointer');
+        });
+        submitButton.click(function(){
+          submitButton.hide();
+          alert("Location added to itinerary");
+        });
+        
+
+      }else{
+        throw new Error("A location in the places list doesn't contain location data.");
+      }
     }
-  }
-
+  });
   return resultList;
 }
 
@@ -224,4 +260,20 @@ function cleanUp(){
 
   //Defines a new bounding box for the map
   bounds = new google.maps.LatLngBounds();
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
 }
