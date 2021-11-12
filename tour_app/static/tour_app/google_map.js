@@ -159,35 +159,16 @@ function addPlacesToResultSidebar(places){
   $(document).ready(function() {
     for (const place of places) {
       if (place.geometry && place.geometry.location) {
-        /*resultList = document.getElementById("places");
-        const li = document.createElement("li");
-        li.setAttribute("id", place.name);
-        li.textContent = place.name;
-        resultList.appendChild(li);
-        li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
-          map.setCenter(place.geometry.location);
-          map.setZoom(15);
-        });*/
         resultList = document.getElementById("places");
-        
-        var place_lat = place.geometry.location.lat;
-        var place_lng = place.geometry.location.lng;
         var csrftoken = getCookie('csrftoken');
         
         var placeDiv = $(document.createElement('div')).attr({'class':'place_div'});
         var placeTitle = $(document.createElement('p')).attr({"class":"placeName"});
         placeTitle.text(place.name);
-        var saveForm = $(document.createElement('form')).attr({'class':'place_form', "action":"\\", "method":"post"});
-        var csrftoken = $(document.createElement('input')).attr({"name":"csrfmiddlewaretoken", "type":"hidden", "value":csrftoken, 'readonly':true});
-        var placeName = $(document.createElement('input')).attr({'class':'place_name', "name":"place_name", "type":"hidden", "value":place.name, 'readonly':true});
-        var placeLat = $(document.createElement('input')).attr({'class':'place_lat', "name":"place_lat", "type":"hidden", "value":place_lat, 'readonly':true});
-        var placeLng = $(document.createElement('input')).attr({'class':'place_lng', "name":"place_lng", "type":"hidden", "value":place_lng, 'readonly':true});
-        var submitButton = $(document.createElement('input')).attr({"class":"place_submit", "type":"submit", "value":"Save to Itinerary"});
-        
-        saveForm.append(csrftoken,placeName,placeLat,placeLng,submitButton);
-        placeDiv.append(placeTitle,saveForm);
 
-        
+        var submitButton = $(document.createElement('input')).attr({"id": place.name +"_id" , "class":"place_submit", "type":"submit", "value":"Save to Itinerary"});
+        placeDiv.append(placeTitle,submitButton); //saveForm
+
         $("#places").append(placeDiv);
         placeDiv.click(function(){
           map.setCenter(place.geometry.location);
@@ -197,11 +178,25 @@ function addPlacesToResultSidebar(places){
           $(this).css('cursor','pointer');
         });
         submitButton.click(function(){
-          submitButton.hide();
-          alert("Location added to itinerary");
+          $.ajax(
+            {
+              type:"POST",
+              url: "/saveLocation/",
+              data:{
+                place_name: place.name,
+                lat: place.geometry.location.lat,
+                lng: place.geometry.location.lng,
+                csrfmiddlewaretoken: csrftoken,
+              },
+              success: function( data ) 
+              {
+
+              }
+             })
+             $(this).remove();
+             alert(place.name + " has been saved to itineray");
         });
         
-
       }else{
         throw new Error("A location in the places list doesn't contain location data.");
       }
