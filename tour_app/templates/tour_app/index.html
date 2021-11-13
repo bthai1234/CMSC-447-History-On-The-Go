@@ -10,9 +10,6 @@
     
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/style.css' %}">
-    <script type="text/javascript">
-    DJANGO_STATIC_URL = '{{ STATIC_URL }}';
-    </script>
     <!--Loads google map api-->
     <script
       src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
@@ -28,9 +25,22 @@
       <div id="sidebar">
         <!--Search box-->
         <div id ="input_container">
-          <input id="map-input-Figure" class="form-control controls" type="text" placeholder="Enter Historical Figure"/>
-          <input id="map-input-address" class="form-control controls" type="text" placeholder="Enter Search Address"/>
-          <input id="searchSubmitButton" class=" btn-primary mb-3" type="button" value="Search Based on Historical Figure">
+          <label class ="form-label" for="Figure">Enter a Historical Figure: </label>
+          <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
+          <label class ="form-label" for="address">Enter Address to Search from: </label>
+          <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
+          {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
+          <div>
+            <label class ="form-label" for="radius">Search Radius (km): </label>
+            <select id="map-input-radius" class="form-control" name="radius">
+              <option class="map-input-option" value="5">5</option>
+              <option class="map-input-option" value="10">10</option>
+              <option class="map-input-option" value="25">25</option>
+              <option class="map-input-option" value="50">50</option>
+              <option class="map-input-option" value="100">100</option>
+            </select>
+          </div>
+          <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
         </div>
         <h2>Results</h2>
         <div id="places" class="places_list">
@@ -39,5 +49,3 @@
       </div>
     </div>
   </body>
-
-

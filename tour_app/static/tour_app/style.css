@@ -39,3 +39,6 @@ body {
   box-shadow: 2px 3px #888888;
 }
 
+.form-control{
+  margin-bottom: 10px;
+}
