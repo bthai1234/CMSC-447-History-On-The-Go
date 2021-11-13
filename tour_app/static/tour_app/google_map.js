@@ -161,27 +161,41 @@ function addPlacesToResultSidebar(places){
       if (place.geometry && place.geometry.location) {
         resultList = document.getElementById("places");
         var csrftoken = getCookie('csrftoken');
+
+
+        var placeCard = $(document.createElement('div')).attr({'class':'card'});
+        var cardBody = $(document.createElement('div')).attr({'class':'card-body'});
+
+        //var locationImg = $(document.createElement('img')).attr({'src': '' ,'class': 'card-img-top', 'alt': ''});
+        var cardHeader = $(document.createElement('h5')).attr({"class":"card-header"});
+
+        var cardTitle = $(document.createElement('h5')).attr({"class":"card-title"});
+        var cardText = $(document.createElement('p')).attr({"class":"card-text"});
+        var submitButton = $(document.createElement('input')).attr({"id": place.name +"_id" , "class":"btn btn-primary", "type":"submit", "value":"Save to Itinerary"});
         
-        var placeDiv = $(document.createElement('div')).attr({'class':'place_div'});
-        var placeTitle = $(document.createElement('p')).attr({"class":"placeName"});
-        placeTitle.text(place.name);
+        cardHeader.text(place.name);
+        cardText.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+        cardTitle.text(place.name);
 
-        var submitButton = $(document.createElement('input')).attr({"id": place.name +"_id" , "class":"place_submit", "type":"submit", "value":"Save to Itinerary"});
-        placeDiv.append(placeTitle,submitButton); //saveForm
 
-        $("#places").append(placeDiv);
-        placeDiv.click(function(){
+        cardBody.append(cardText,submitButton);
+        placeCard.append(cardHeader,cardBody); //saveForm
+
+        $("#places").append(placeCard);
+        placeCard.click(function(){
           map.setCenter(place.geometry.location);
           map.setZoom(15);
         });
-        placeDiv.hover(function(){
+        placeCard.hover(function(){
           $(this).css('cursor','pointer');
         });
+        
         submitButton.click(function(){
           $.ajax(
             {
               type:"POST",
               url: "/saveLocation/",
+              dataType: "json",
               data:{
                 place_name: place.name,
                 lat: place.geometry.location.lat,
@@ -190,11 +204,15 @@ function addPlacesToResultSidebar(places){
               },
               success: function( data ) 
               {
-
+                
+                alert(data.message); 
+              },
+              error: function(error){
+                alert(error.message); // the message
               }
              })
-             $(this).remove();
-             alert(place.name + " has been saved to itineray");
+            
+             $(this).hide();
         });
         
       }else{

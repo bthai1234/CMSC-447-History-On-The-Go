@@ -2,7 +2,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, response
 
 from tour_app.models import Itinerary
 from .forms import RegisterUserForm
@@ -54,7 +54,8 @@ def map_test(request):
     return render(request, 'tour_app/map_test.html', context)
 
 def saveLocation(request):
-    if request.method == 'POST':
+
+    if request.method == 'POST' and request.user.is_authenticated:
         user = request.user.username
         Itinerary_obj = Itinerary.objects.get(itinerary_name= user + " Itinerary")
 
@@ -63,6 +64,10 @@ def saveLocation(request):
         long= request.POST['lng']
         location = Itinerary_location(loc_name = location_name, latitude = lat, longitude = long, itinerary_id = Itinerary_obj.id)
         location.save()
-        return HttpResponse("Location Saved!") # Sending an success response
+        response = JsonResponse({"message": "Location added to Itinerary"})
+        response.status_code = 201 
+        return response # Sending an success response
     else:
-        return HttpResponse("error")
+        response = JsonResponse({"message": "Can not save location to initnerary, user not logged in."})
+        response.status_code = 200  
+        return response

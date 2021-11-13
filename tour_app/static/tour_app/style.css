@@ -27,53 +27,15 @@ body {
   overflow-y: scroll;
 }
 
-.place_div {
-  border-radius: 25px;
-  border: 2px solid #000000;
-  padding: 20px;
-  margin-bottom: 3px;
-}
-
-.placeDiv, .place_form, p{
-  margin: 0px;
-  padding: 0px;
-}
-
-
-div.places_list>div:nth-of-type(odd) {
-  background: #e0e0e0;
-}
-
 #map {
   flex-basis: 0;
   flex-grow: 4;
   height: 100%;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  overflow-y: scroll;
-  flex-grow: 1;
+.card{
+  margin-right: 5px;
+  margin-bottom: 10px;
+  box-shadow: 2px 3px #888888;
 }
 
-li {
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 1.25rem;
-  cursor: pointer;
-}
-
-li:nth-child(odd) {
-  background-color: #fcfcfc;
-}
-
-#map-input {
-    background-color: #fff;
-    font-size: 18px; 
-    margin-left: 12px;
-    padding: 0 11px 0 13px;
-    width: 40%;
-    height: 5%;
-  }
