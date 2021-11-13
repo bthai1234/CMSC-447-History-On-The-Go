@@ -21,7 +21,18 @@
         <div id ="input_container">
           <input id="map-input-Figure" class="controls" type="text" placeholder="Enter Historical Figure"/>
           <input id="map-input-address" class="controls" type="text" placeholder="Enter Search Address"/>
-          <input id="searchSubmitButton" type="button" value="Search Based on Historical Figure">
+          {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
+          <div>
+            <label for="radius">Search Radius (km): </label>
+            <select id="map-input-radius" class="controls" name="radius">
+              <option class="map-input-option" value="5">5</option>
+              <option class="map-input-option" value="10">10</option>
+              <option class="map-input-option" value="25">25</option>
+              <option class="map-input-option" value="50">50</option>
+              <option class="map-input-option" value="100">100</option>
+            </select>
+          </div>
+          <input id="searchSubmitButton" type="button" value="Search Based on Historical Figure"/>
         </div>
         <h2>Results</h2>
         <div id="places" class="places_list">
@@ -30,5 +41,3 @@
       </div>
     </div>
   </body>
-
-

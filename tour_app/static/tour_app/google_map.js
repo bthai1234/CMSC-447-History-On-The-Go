@@ -6,7 +6,6 @@ let bounds;
 var placesList = [];//Stores the array of locations returned from the google maps API
 var markerList = [];//Stores the list of markers that have been placed on the map
 var resultList = [];//Stores the list of HTML <li> list elements shown in the sidebar result list with id = 'places'  
-var search_radus = '25000';//default value
 
 function initMap() {
   //initialize the base map from google map api.
@@ -60,14 +59,18 @@ function getSearchBox(){
 //calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
 async function loadMapMarkersAndPlaces(searchlocation, input_figure){
   cleanUp();//clears data from previous search
- 
+  
+  let radiusSelect = document.getElementById("map-input-radius");
+  // Value needs to multipled by 1000 to get meters -> kilometers
+  let searchRadius = parseInt(radiusSelect.value) * 1000;
+
   //perform multiple searches with diffrent keywords, and combine each result
-  await getPlaces(input_figure + " historical", searchlocation, search_radus).then(function(results){
+  await getPlaces(input_figure + " historical", searchlocation, searchRadius).then(function(results){
     placesList = results;
   }, function(err){
     throw new Error(err);
   });
-  await getPlaces(input_figure + " museum", searchlocation, search_radus).then(function(results){
+  await getPlaces(input_figure + " museum", searchlocation, searchRadius).then(function(results){
     placesList = concatResults(placesList, results);
   }, function(err){
     throw new Error(err);
@@ -76,7 +79,7 @@ async function loadMapMarkersAndPlaces(searchlocation, input_figure){
 
   //If no search results are matched return 1.
   if(placesList.length == 0){
-    console.log("No results found");
+    alert("No locations found")
     return 1;
   }
   
@@ -194,7 +197,7 @@ function addPlacesToResultSidebar(places){
               }
              })
              $(this).remove();
-             alert(place.name + " has been saved to itineray");
+             alert(place.name + " has been saved to itinerary");
         });
         
       }else{
@@ -251,7 +254,6 @@ function cleanUp(){
   resultList = [];
   markerList = [];
   placesList = [];
-  search_radus = '25000';
 
   //Defines a new bounding box for the map
   bounds = new google.maps.LatLngBounds();
