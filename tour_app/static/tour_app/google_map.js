@@ -34,20 +34,41 @@ function getSearchBox(){
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
   var input_address = document.getElementById("map-input-address");
   var searchBox = new google.maps.places.SearchBox(input_address);
-
+  var searchlocation = "";
+  var input_figure = "";
+    
+  
   //event Listener for the button with id searchSubmitButton and
   //gets the values in the search box and
   //calls the loadMapMarkersAndPlaces() 
   document.getElementById("searchSubmitButton").addEventListener("click", function() {
-    var searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
-    var input_figure = document.getElementById("map-input-Figure").value;
+    searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
+    input_figure = document.getElementById("map-input-Figure").value;
 
     try{
-      loadMapMarkersAndPlaces(searchlocation, input_figure);
+        loadMapMarkersAndPlaces(searchlocation, input_figure);
     }catch(e){
       throw new Error(e);
     }
   });
+
+  //event listener for google maps address search box, will do the same as pressing the search button
+  $("#map-input-address").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#searchSubmitButton").click();
+    }
+  });
+  //event listener for radius select to , will do the same as pressing the search button
+  $("#map-input-radius").change(function() {
+      $("#searchSubmitButton").click();
+  });
+  //event listener for figure input, will do the same as pressing the search button
+  $("#map-input-Figure").keyup(function() {
+    if (event.keyCode === 13) {
+      $("#searchSubmitButton").click();
+    }
+  });
+
 
   var inputs = {
     address: document.getElementById("map-input-address"),
@@ -55,6 +76,7 @@ function getSearchBox(){
   }
   return inputs;
 }
+
 
 //calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
 async function loadMapMarkersAndPlaces(searchlocation, input_figure){

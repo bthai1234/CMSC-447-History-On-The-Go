@@ -32,8 +32,8 @@ class Itinerary_location(models.Model):
         on_delete=models.CASCADE, 
     )
     loc_name = models.CharField(max_length=100)
-    latitude = models.DecimalField(max_digits=17, decimal_places=15)
-    longitude = models.DecimalField(max_digits=18, decimal_places=15)
+    latitude = models.DecimalField(max_digits=17, decimal_places=6)
+    longitude = models.DecimalField(max_digits=18, decimal_places=6)
 
 
 
