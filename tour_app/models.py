@@ -16,6 +16,9 @@ class Itinerary(models.Model):
         on_delete=models.CASCADE, 
     )
     itinerary_name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.itinerary_name
+
 
 class Itinerary_location(models.Model):
     """Holds the locations of a given itinerary 
@@ -34,7 +37,8 @@ class Itinerary_location(models.Model):
     loc_name = models.CharField(max_length=100)
     latitude = models.DecimalField(max_digits=17, decimal_places=6)
     longitude = models.DecimalField(max_digits=18, decimal_places=6)
-
+    def __str__(self):
+        return self.loc_name
 
 
 class UserLocation(models.Model):
