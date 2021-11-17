@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RegisterUserForm
+from .forms import RegisterUserForm, ProfileForm, form_validation_check
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render
@@ -37,9 +37,15 @@ def loginPage(request):
     context = {}
     return render(request, 'tour_app/loginPage.html', context)
 
+
+def profilePage(request):
+    pass
+
+
 def index(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the .env file 
     return render(request, 'tour_app/index.html', context)
+
 
 def map_test(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the .env file 
