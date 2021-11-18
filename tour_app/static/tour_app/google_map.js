@@ -6,7 +6,6 @@ let bounds;
 var placesList = [];//Stores the array of locations returned from the google maps API
 var markerList = [];//Stores the list of markers that have been placed on the map
 var resultList = [];//Stores the list of HTML <li> list elements shown in the sidebar result list with id = 'places'  
-var search_radus = '25000';//default value
 
 function initMap() {
   //initialize the base map from google map api.
@@ -35,20 +34,41 @@ function getSearchBox(){
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
   var input_address = document.getElementById("map-input-address");
   var searchBox = new google.maps.places.SearchBox(input_address);
-
+  var searchlocation = "";
+  var input_figure = "";
+    
+  
   //event Listener for the button with id searchSubmitButton and
   //gets the values in the search box and
   //calls the loadMapMarkersAndPlaces() 
   document.getElementById("searchSubmitButton").addEventListener("click", function() {
-    var searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
-    var input_figure = document.getElementById("map-input-Figure").value;
+    searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
+    input_figure = document.getElementById("map-input-Figure").value;
 
     try{
-      loadMapMarkersAndPlaces(searchlocation, input_figure);
+        loadMapMarkersAndPlaces(searchlocation, input_figure);
     }catch(e){
       throw new Error(e);
     }
   });
+
+  //event listener for google maps address search box, will do the same as pressing the search button
+  $("#map-input-address").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#searchSubmitButton").click();
+    }
+  });
+  //event listener for radius select to , will do the same as pressing the search button
+  $("#map-input-radius").change(function() {
+      $("#searchSubmitButton").click();
+  });
+  //event listener for figure input, will do the same as pressing the search button
+  $("#map-input-Figure").keyup(function() {
+    if (event.keyCode === 13) {
+      $("#searchSubmitButton").click();
+    }
+  });
+
 
   var inputs = {
     address: document.getElementById("map-input-address"),
@@ -57,17 +77,22 @@ function getSearchBox(){
   return inputs;
 }
 
+
 //calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
 async function loadMapMarkersAndPlaces(searchlocation, input_figure){
   cleanUp();//clears data from previous search
- 
+  
+  let radiusSelect = document.getElementById("map-input-radius");
+  // Value needs to multipled by 1000 to get meters -> kilometers
+  let searchRadius = parseInt(radiusSelect.value) * 1000;
+
   //perform multiple searches with diffrent keywords, and combine each result
-  await getPlaces(input_figure + " historical", searchlocation, search_radus).then(function(results){
+  await getPlaces(input_figure + " historical", searchlocation, searchRadius).then(function(results){
     placesList = results;
   }, function(err){
     throw new Error(err);
   });
-  await getPlaces(input_figure + " museum", searchlocation, search_radus).then(function(results){
+  await getPlaces(input_figure + " museum", searchlocation, searchRadius).then(function(results){
     placesList = concatResults(placesList, results);
   }, function(err){
     throw new Error(err);
@@ -76,7 +101,7 @@ async function loadMapMarkersAndPlaces(searchlocation, input_figure){
 
   //If no search results are matched return 1.
   if(placesList.length == 0){
-    console.log("No results found");
+    alert("No locations found")
     return 1;
   }
   
@@ -155,22 +180,71 @@ function addMarkers(places, map) {
 //if there is a sidebar defined in the HTML with a <ul id="places"></ul> tag, to display a list of the results, add the names of the given locations to the sidebar  
 function addPlacesToResultSidebar(places){
   if(!document.getElementById("places")){throw new Error('HTML ul list element with id = places  not found ');}
+  
+  $(document).ready(function() {
+    for (const place of places) {
+      if (place.geometry && place.geometry.location) {
+        resultList = document.getElementById("places");
+        var csrftoken = getCookie('csrftoken');
 
-  for (const place of places) {
-    if (place.geometry && place.geometry.location) {
-      resultList = document.getElementById("places");
-      const li = document.createElement("li");
-      li.textContent = place.name;
-      resultList.appendChild(li);
-      li.addEventListener("click", () => { //adds event listiner to center map to location when location name is clicked from the sidebar
-        map.setCenter(place.geometry.location);
-        map.setZoom(15);
-      });
-    }else{
-      throw new Error("A location in the places list doesn't contain location data.");
+
+        var placeCard = $(document.createElement('div')).attr({'class':'card'});
+        var cardBody = $(document.createElement('div')).attr({'class':'card-body'});
+
+        //var locationImg = $(document.createElement('img')).attr({'src': '' ,'class': 'card-img-top', 'alt': ''});
+        var cardHeader = $(document.createElement('h5')).attr({"class":"card-header"});
+
+        var cardTitle = $(document.createElement('h5')).attr({"class":"card-title"});
+        var cardText = $(document.createElement('p')).attr({"class":"card-text"});
+        var submitButton = $(document.createElement('input')).attr({"id": place.name +"_id" , "class":"btn btn-primary", "type":"submit", "value":"Save to Itinerary"});
+        
+        cardHeader.text(place.name);
+        cardText.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+        cardTitle.text(place.name);
+
+
+        cardBody.append(cardText,submitButton);
+        placeCard.append(cardHeader,cardBody); //saveForm
+
+        $("#places").append(placeCard);
+        placeCard.click(function(){
+          map.setCenter(place.geometry.location);
+          map.setZoom(15);
+        });
+        placeCard.hover(function(){
+          $(this).css('cursor','pointer');
+        });
+        
+        submitButton.click(function(){
+          $.ajax(
+            {
+              type:"POST",
+              url: "/saveLocation/",
+              dataType: "json",
+              data:{
+                place_name: place.name,
+                lat: place.geometry.location.lat,
+                lng: place.geometry.location.lng,
+                csrfmiddlewaretoken: csrftoken,
+              },
+              success: function( data ) 
+              {
+                
+                alert(data.message); 
+              },
+              error: function(error){
+                alert(error.message); // the message
+              }
+             })
+            
+             $(this).hide();
+        });
+        
+      }else{
+        throw new Error("A location in the places list doesn't contain location data.");
+      }
     }
-  }
-
+  });
   return resultList;
 }
 
@@ -220,8 +294,23 @@ function cleanUp(){
   resultList = [];
   markerList = [];
   placesList = [];
-  search_radus = '25000';
 
   //Defines a new bounding box for the map
   bounds = new google.maps.LatLngBounds();
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
 }
