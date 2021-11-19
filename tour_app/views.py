@@ -40,7 +40,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('tour_app:index'))
+            return HttpResponseRedirect(reverse('tour_app:mapPage'))
 
     context = {}
     return render(request, 'tour_app/login.html', context)
@@ -48,6 +48,10 @@ def loginPage(request):
 def index(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
     return render(request, 'tour_app/index.html', context)
+
+def mapPage(request):
+    context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
+    return render(request, 'tour_app/mapPage.html', context)
 
 def map_test(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
