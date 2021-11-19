@@ -18,20 +18,16 @@
     <form action="" method="POST">
       {% csrf_token %}
       <div class="input-box">
-        <!--{{regis_form.username}}-->
-        <input type="text" placeholder="Enter your name" required>
+        {{regis_form.username}}
       </div>
       <div class="input-box">
-        <!--{{regis_form.email}}-->
-        <input type="text" placeholder="Enter your email" required>
+        {{regis_form.email}}
       </div>
       <div class="input-box">
-        <!--{{regis_form.password1}}-->
-        <input type="password" placeholder="Create password" required>
+        {{regis_form.password1}}
       </div>
       <div class="input-box">
-        <!--{{regis_form.password2}}-->
-        <input type="password" placeholder="Confirm password" required>
+        {{regis_form.password2}}
       </div>
       <div class="policy">
         <input type="checkbox">
