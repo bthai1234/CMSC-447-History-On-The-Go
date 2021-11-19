@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="style1.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>History on the Go</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+
+<!--To do: The logo needs to be moved down-->
+<header>
+    <img class="logo" src="images/logo.png" 
+        width="130"
+        height="100"/>
+        <h4>HistoryOnTheGo</h4>
+</header>
+
+<!--Nav bar with Home, Login and Register-->
+<!--To do: Move to the left-->
+<body> 
+    <div class="header">
+        <div class="menu-bar">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Login</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Register</a>
+                    </li>
+                  </ul>
+                
+                </div>
+              </nav>
+        </div>
+    </div>
+</body>
+</head>
+
+<!--Loads google map api -->
+<!--
+<script
+src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
+async
+></script>
+<script src="{% static "tour_app/google_map.js" %}"></script> 
+-->
+
+<!--Search for historical figures and places-->
+<body>
+    <div class="container">
+            <div class="overlay-panel">
+                <input id="map-input-Figure" type="text" placeholder="Search Historical Figures"/>
+                <input id="map-input-address" type="text" placeholder="Search Historical Places" />
+                <div id="container " >
+                    <!--displays google maps
+                    <div id="map"></div>
+                    <div> -->
+
+                        <!--Options to search within a radius-->
+                        <!--To do: Align with the search bars to the left-->
+                        <label class ="form-label" for="radius">Search Radius (km): </label>
+                        <select id="map-input-radius" class="form-control" name="radius">
+                          <option class="map-input-option" value="5">5</option>
+                          <option class="map-input-option" value="10">10</option>
+                          <option class="map-input-option" value="25">25</option>
+                          <option class="map-input-option" value="50">50</option>
+                          <option class="map-input-option" value="100">100</option>
+                        </select>
+                    </div>
+                    <p>
+                        
+                    </p>
+                    <button>Search</button>
+            </div>         
+    </div>
+</body>
+		
