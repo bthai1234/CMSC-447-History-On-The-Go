@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title> Registration Form</title>
-    <link rel="stylesheet" href="registration.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'tour_app/registration.css' %}">
    </head>
 
 
@@ -14,17 +15,22 @@
   <div class="wrapper">
     <h2>Registration</h2>
     <!-- This is where the user submits a form to register, will need to link with backend. -->
-    <form action="#">
+    <form action="" method="POST">
+      {% csrf_token %}
       <div class="input-box">
+        <!--{{regis_form.username}}-->
         <input type="text" placeholder="Enter your name" required>
       </div>
       <div class="input-box">
+        <!--{{regis_form.email}}-->
         <input type="text" placeholder="Enter your email" required>
       </div>
       <div class="input-box">
+        <!--{{regis_form.password1}}-->
         <input type="password" placeholder="Create password" required>
       </div>
       <div class="input-box">
+        <!--{{regis_form.password2}}-->
         <input type="password" placeholder="Confirm password" required>
       </div>
       <div class="policy">

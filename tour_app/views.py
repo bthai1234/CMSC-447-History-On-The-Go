@@ -28,7 +28,7 @@ def registerPage(request):
             new_itinerary = Itinerary(user_id=user.id, itinerary_name= (var_username + ' Itinerary'))
             new_itinerary.save()
             return HttpResponseRedirect(reverse('tour_app:loginPage'))
-    return render(request, 'tour_app/registerPage.html', context)
+    return render(request, 'tour_app/registration.html', context)
 
 
 def loginPage(request):
@@ -43,7 +43,7 @@ def loginPage(request):
             return HttpResponseRedirect(reverse('tour_app:index'))
 
     context = {}
-    return render(request, 'tour_app/loginPage.html', context)
+    return render(request, 'tour_app/login.html', context)
 
 def index(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
