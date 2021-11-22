@@ -39,7 +39,7 @@ def loginPage(request):
 
 
 def profilePage(request):
-    pass
+    return render(request, 'tour_app/profilePage.html', {})
 
 
 def index(request):

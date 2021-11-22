@@ -23,11 +23,20 @@
       <div id="map"></div>
       <!--Search Results sidebar-->
       <div id="sidebar">
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-4"></div>
+              <div class="col-lg-4"></div>
+              <div class="col-lg-4">
+                <button id="profile-button" class="btn btn-info btn-lg float-right" onclick="redirectProfile()">Profile</button>
+              </div>
+          </div>
+        </div>
         <!--Search box-->
         <div id ="input_container">
-          <label class ="form-label" for="Figure">Enter a Historical Figure: </label>
+          <label class ="form-label my-1" for="Figure">Enter a Historical Figure: </label>
           <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
-          <label class ="form-label" for="address">Enter Address to Search from: </label>
+          <label class ="form-label my-1" for="address">Enter Address to Search from: </label>
           <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
           {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
           <div>
