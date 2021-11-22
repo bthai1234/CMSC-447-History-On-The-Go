@@ -99,7 +99,7 @@ class RegisterPageTest(BaseCase):
     def test_load_register_page(self):
         response = self.client.get(self.registerPage)
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'tour_app/registerPage.html')
+        self.assertTemplateUsed(response, 'tour_app/registration.html')
 
     # This test is to test if a valid user's registration will go to the database or not
     def test_user_in_database(self):
@@ -164,7 +164,7 @@ class LoginPageTest(BaseCase):
     def test_load_login_page(self):
         response = self.client.get(self.loginPage)
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'tour_app/loginPage.html')
+        self.assertTemplateUsed(response, 'tour_app/login.html')
 
     def test_login_successful(self):
         user = get_user_model().objects.get(username="username")
