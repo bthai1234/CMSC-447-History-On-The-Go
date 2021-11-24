@@ -225,8 +225,3 @@ function cleanUp(){
   //Defines a new bounding box for the map
   bounds = new google.maps.LatLngBounds();
 }
-
-function redirectProfile() {
-  let profile_button = document.getElementById("profile-button");
-  profile_button.onclick = "location.href = '/profile'";
-}

@@ -2,6 +2,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RegisterUserForm, ProfileForm, form_validation_check
 from django.contrib import messages
@@ -37,7 +38,8 @@ def loginPage(request):
     context = {}
     return render(request, 'tour_app/loginPage.html', context)
 
-
+# user profile form page
+@login_required
 def profilePage(request):
     return render(request, 'tour_app/profilePage.html', {})
 
