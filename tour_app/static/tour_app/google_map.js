@@ -115,9 +115,10 @@ async function loadMapMarkersAndPlaces(searchlocation, input_figure){
   addMarkers(placesList, map); //adds all markers to the map
   addPlacesToResultSidebar(placesList); //add location names to the sidebar result list if one is defined in the HTML with the <ul id="places"></ul> tag
   
+  var home_icon_url = document.getElementById("start-location-marker").textContent;
   //add specific special marker icon for original search position
   const icon = { 
-    url: "../../static/tour_app/images/map_home.png",
+    url: home_icon_url, 
     scaledSize: new google.maps.Size(40, 40),
     origin: new google.maps.Point(0, 0),
     anchor: new google.maps.Point(0, 40),
