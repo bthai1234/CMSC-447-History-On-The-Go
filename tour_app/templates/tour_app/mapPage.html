@@ -42,10 +42,21 @@
           </div>
           <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
         </div>
-          <h2>Results</h2>
-          <div id="places" class="places_list">
-          {% csrf_token %}
-          </div>
+          <ul id="sidebar-tablist" class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button id="results-tab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#places" type="button" role="tab" aria-controls="places" aria-selected="true">Results</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button id="directions-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#directions" type="button" role="tab" aria-controls="directions" aria-selected="false">Directions</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="sidebarContent">
+            {% csrf_token %}
+            <div id="places" class="tab-pane fade show active places_list" role="tabpanel" aria-labelledby="results-tab"></div>
+            <div id="directions" class="tab-pane fade" role="tabpanel" aria-labelledby="directions-tab"></div>
+          </div>  
+
+
       </div>
     </div>
   </body>

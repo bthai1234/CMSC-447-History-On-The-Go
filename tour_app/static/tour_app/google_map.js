@@ -25,7 +25,8 @@ function initMap() {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
-
+  directionsRenderer.setPanel(document.getElementById("directions"));
+  
   try{
     getSearchBox();
   }catch(e){
@@ -195,7 +196,7 @@ function addPlacesToResultSidebar(places){
         var csrftoken = getCookie('csrftoken');
 
 
-        var placeCard = $(document.createElement('div')).attr({'class':'card'});
+        var placeCard = $(document.createElement('div')).attr({"id": place.name, 'class':'shadow-sm mb-3 bg-body rounded card'});
         var cardBody = $(document.createElement('div')).attr({'class':'card-body'});
 
         //var locationImg = $(document.createElement('img')).attr({'src': '' ,'class': 'card-img-top', 'alt': ''});
@@ -203,29 +204,37 @@ function addPlacesToResultSidebar(places){
 
         var cardTitle = $(document.createElement('h5')).attr({"class":"card-title"});
         var cardText = $(document.createElement('p')).attr({"class":"card-text"});
-        var submitButton = $(document.createElement('input')).attr({"id": place.name + "_id" , "class":"btn btn-primary", "type":"submit", "value":"Save to Itinerary"});
+
+        
+        var submitButton = $(document.createElement('input')).attr({"id": place.name + "_id" , "class":"btn btn-primary card-button", "type":"submit", "value":"Save to Itinerary"});
+        var directionsButton = $(document.createElement('input')).attr({"class":"btn btn-primary card-button", "type":"submit", "value":"View Directions"});
         
         cardHeader.text(place.name);
         cardText.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         cardTitle.text(place.name);
 
-
-        cardBody.append(cardText,submitButton);
+        cardBody.append(cardText, submitButton, directionsButton);
         placeCard.append(cardHeader,cardBody); //saveForm
 
-
-
         $("#places").append(placeCard);
+
+        directionsButton.click(function(){
+          calculateAndDisplayRoute(directionsService, directionsRenderer, searchlocation, place.geometry.location);
+          $("#directions-tab").click();
+        });
         placeCard.click(function(){
-          calculateAndDisplayRoute(directionsService, directionsRenderer, searchlocation, place.geometry.location)
+          directionsRenderer.set('directions', null);
+
+          map.setCenter(place.geometry.location);
+          map.setZoom(16);
+          //calculateAndDisplayRoute(directionsService, directionsRenderer, searchlocation, place.geometry.location);
         });
         placeCard.hover(function(){
           $(this).css('cursor','pointer');
         });
         
         submitButton.click(function(){
-          $.ajax(
-            {
+          var request = $.ajax({
               type:"POST",
               url: "/saveLocation/",
               dataType: "json",
@@ -233,18 +242,20 @@ function addPlacesToResultSidebar(places){
                 place_name: place.name,
                 lat: place.geometry.location.lat,
                 lng: place.geometry.location.lng,
-                csrfmiddlewaretoken: csrftoken,
-              },
-              success: function( data ) 
-              {
-                //alert(data.message); 
-              },
-              error: function(error){
-                alert(error.message); // the message
+                csrfmiddlewaretoken: csrftoken
               }
-             })
+          });
+
+          request.done(function( data ) 
+          {
+            //alert(data.message); 
+          });
+
+          request.fail(function(){
+            alert("Unable to save loctaion, user not logged in"); // the message
+          });
             
-             $(this).hide();
+          $(this).hide();
         });
         
       }else{
@@ -332,6 +343,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, start, 
       waypoints: waypts,
       optimizeWaypoints: true,
       travelMode: google.maps.TravelMode.DRIVING,
+      provideRouteAlternatives: true
     })
     .then((response) => {
       directionsRenderer.setDirections(response);

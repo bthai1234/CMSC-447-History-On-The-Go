@@ -24,15 +24,16 @@ body {
 #places{
   height: 100%;
   width: 100%;
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
+}
+
+#directions{
+  height: 100%;
+  width: 100%;
+  /*overflow-y: scroll;*/
 }
 
 #map {
-  flex-basis: 0;
-  flex-grow: 4;
-  height: 100%;
-}
-#mapcontainer{
   flex-basis: 0;
   flex-grow: 4;
   height: 100%;
@@ -41,9 +42,18 @@ body {
 .card{
   margin-right: 5px;
   margin-bottom: 10px;
-  box-shadow: 2px 3px #888888;
+  /*box-shadow: 2px 3px #888888;*/
 }
 
 .form-control{
   margin-bottom: 10px;
+}
+
+.tab-content{
+  padding-top: 5px;
+  overflow-y: scroll;
+}
+
+.card-button{
+  margin-right: 2px;
 }
