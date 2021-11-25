@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 
+app_name = 'main'
 
 # Create your views here.
 def registerPage(request):
@@ -39,7 +40,7 @@ def loginPage(request):
     return render(request, 'tour_app/loginPage.html', context)
 
 # user profile form page
-@login_required
+@login_required(login_url=' tour_app/login/')
 def profilePage(request):
     return render(request, 'tour_app/profilePage.html', {})
 
@@ -52,3 +53,9 @@ def index(request):
 def map_test(request):
     context = {"google_api_key": settings.GOOGLE_API_KEY}#Retrieves the google api key from the setting.py file which in turn gets the key from the .env file 
     return render(request, 'tour_app/map_test.html', context)
+
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "You have logged out")
+    return redirect("main:index")

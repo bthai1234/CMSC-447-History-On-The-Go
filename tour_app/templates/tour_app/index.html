@@ -23,20 +23,27 @@
       <div id="map"></div>
       <!--Search Results sidebar-->
       <div id="sidebar">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-2 offset-md-10">
-              <a href="profile" class="btn btn-md btn-info">Profile</a>
-            </div>
-          </div>
-        </div>
+        <div class="row justify-content-between">
+            {% comment %} Show profile button only if the auther is logged into the application {% endcomment %}
+            {% if user.is_authenticated %}
+              <div class="col">
+                <a href="profile" class="btn btn-md btn-info">Profile</a>
+                <a href="logout" class="btn">Log Out</a>
+              </div>
+            {% else %}
+              <div class="col-9">
+                <a href="login/" class="btn btn-md btn-warning">Login</a>
+              </div>
+              <div class="col-3">
+                <a href="register/" class="btn btn-md btn-info">Register</a>
+              </div>
+            {% endif %}
         <!--Search box-->
         <div id ="input_container">
           <label class ="form-label my-1" for="Figure">Enter a Historical Figure: </label>
           <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
           <label class ="form-label my-1" for="address">Enter Address to Search from: </label>
           <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
-          {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
           <div>
             <label class ="form-label" for="radius">Search Radius (km): </label>
             <select id="map-input-radius" class="form-control" name="radius">
