@@ -22,26 +22,39 @@ def registerPage(request):
     context = {'regis_form': regis_form}
     # If I don't assign for var_password1 and var_password2, template would throw errors
     var_email = ""
-    var_registered_email = "1"
+    var_registering_username = ""
     var_password1 = ""
     var_password2 = ""
     if request.method == 'POST':
         regis_form = RegisterUserForm(request.POST)
+        var_registering_username = request.POST['username']
         var_email = request.POST['email']
         var_password1 = request.POST['password1']
         var_password2 = request.POST['password2']
 
         print("var_email = ", var_email)
+        try:
+            if get_user_model().objects.get(username=var_registering_username):
+                messages.error(request, "Username has been used")
+                messages.info(request, "Notes: Invalid information would cause a redirection to this page")
+                return render(request, 'tour_app/registration.html', context)
+        except:
+            print("Good for register")
+
         if regis_form.is_valid():
             emails = get_user_model().objects.all()
-            for objectName in emails:
-                print(objectName.email)
-                if var_email == objectName.email:
-                    messages.error(request, "Email has been used")
-                    messages.info(request,
-                                  "Notes: User would be redirect to registration page if they provide invalid information")
-                    return render(request, 'tour_app/registration.html', context)
+            if any(True for objectName in emails if var_email == objectName.email):
+                messages.error(request, "Email has been used")
+                messages.info(request, "Notes: Invalid information would cause a redirection to this page")
+                return render(request, 'tour_app/registration.html', context)
 
+            # for objectName in emails:
+            #     print(objectName.email)
+            #     if var_email == objectName.email:
+            #         messages.error(request, "Email has been used")
+            #         messages.info(request,
+            #                       "Notes: User would be redirect to registration page if username has been used")
+            #         return render(request, 'tour_app/registration.html', context)
             regis_form.save()
             var_username = request.POST['username']
             user = get_user_model().objects.get(username=var_username)
@@ -49,32 +62,44 @@ def registerPage(request):
             new_itinerary.save()
             return HttpResponseRedirect(reverse('tour_app:loginPage'))
 
-    # if var_email == var_registered_email:
-    #     # var_is_email_existing = True
-    #     messages.error(request, "Email has been used")
-    # else:
-    #     print("Email")
     if var_password1 == var_password2:
         print("Password Matched")
     else:
         messages.error(request, "Password is not matching")
 
-    messages.info(request, "Notes: User would be redirect to registration page if they provide invalid information")
+    messages.info(request, "Notes: Invalid information would cause a redirection to this page")
     return render(request, 'tour_app/registration.html', context)
 
 
 def loginPage(request):
+    var_flag = False
+    context = {}
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        if username == "":
+            var_flag = True
+            messages.error(request, "Please provide username")
+        if password == "":
+            var_flag = True
+            messages.error(request, "Please provide password")
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse('tour_app:mapPage'))
+        else:
+            if not var_flag:
+                try:
+                    if get_user_model().objects.get(username=username):
+                        messages.error(request, "Incorrect Password")
+                        return render(request, 'tour_app/login.html', context)
+                except:
+                    print("Cannot find reason")
 
-    context = {}
+                messages.error(request, "Cannot find username")
+                return render(request, 'tour_app/login.html', context)
+
     return render(request, 'tour_app/login.html', context)
 
 
