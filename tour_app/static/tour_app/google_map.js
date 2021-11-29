@@ -26,7 +26,6 @@ function initMap() {
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
   directionsRenderer.setPanel(document.getElementById("directions"));
-  
   try{
     getSearchBox();
   }catch(e){
@@ -38,16 +37,15 @@ function getSearchBox(){
   if(!document.getElementById("map-input-address")){throw new Error('Text box with HTML id = map-input-address not found');}
   if(!document.getElementById("searchSubmitButton")){throw new Error('HTML Button element with HTML id = searchSubmitButton not found');}
   if(!document.getElementById("map-input-Figure")){throw new Error('Text box with HTML id = map-input-Figure not found');}
-  
+
   //Gets search box with id="map-input" and appys google maps api search prediction and auto fill
   var input_address = document.getElementById("map-input-address");
   var searchBox = new google.maps.places.SearchBox(input_address);
   searchlocation = "";
   var input_figure = "";
-    
   //event Listener for the button with id searchSubmitButton and
   //gets the values in the search box and
-  //calls the loadMapMarkersAndPlaces() 
+  //calls the loadMapMarkersAndPlaces()
   document.getElementById("searchSubmitButton").addEventListener("click", function() {
     searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
     input_figure = document.getElementById("map-input-Figure").value;
@@ -85,10 +83,10 @@ function getSearchBox(){
 }
 
 
-//calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions 
+//calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions
 async function loadMapMarkersAndPlaces(searchlocation, input_figure){
   cleanUp();//clears data from previous search
-  
+
   let radiusSelect = document.getElementById("map-input-radius");
   // Value needs to multipled by 1000 to get meters -> kilometers
   let searchRadius = parseInt(radiusSelect.value) * 1000;
@@ -111,10 +109,9 @@ async function loadMapMarkersAndPlaces(searchlocation, input_figure){
     alert("No locations found")
     return 1;
   }
-  
+
   addMarkers(placesList, map); //adds all markers to the map
   addPlacesToResultSidebar(placesList); //add location names to the sidebar result list if one is defined in the HTML with the <ul id="places"></ul> tag
-  
   var home_icon_url = document.getElementById("start-location-marker").textContent;
   //add specific special marker icon for original search position
   const icon = { 
@@ -142,7 +139,7 @@ function getPlaces(searchKeyword, searchLocation, searchRadius){
   };
 
   return new Promise((resolve, reject) => {
-    service.nearbySearch(request, (results, status) => { 
+    service.nearbySearch(request, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK || results){
         resolve(results);
       }else{
@@ -153,11 +150,11 @@ function getPlaces(searchKeyword, searchLocation, searchRadius){
   });
 }
 
-//takes a list of locations returned by the google maps api for the first parameter and a refrence to the map object in the second and adds markers to the map    
+//takes a list of locations returned by the google maps api for the first parameter and a refrence to the map object in the second and adds markers to the map
 function addMarkers(places, map) {
   for (const place of places) {
     if (place.geometry && place.geometry.location) {
-      if(!containsMarker(place, markerList)){ //first check if marker was already added berfore adding marker to map 
+      if(!containsMarker(place, markerList)){ //first check if marker was already added berfore adding marker to map
         const marker = new google.maps.Marker({ //creates new marker and adds to map
           map,
           title: place.name,
@@ -185,7 +182,7 @@ function addMarkers(places, map) {
 }
 
 //Param: places - array of locations returned by google maps api
-//if there is a sidebar defined in the HTML with a <ul id="places"></ul> tag, to display a list of the results, add the names of the given locations to the sidebar  
+//if there is a sidebar defined in the HTML with a <ul id="places"></ul> tag, to display a list of the results, add the names of the given locations to the sidebar
 function addPlacesToResultSidebar(places){
   if(!document.getElementById("places")){throw new Error('HTML ul list element with id = places  not found ');}
 
@@ -205,7 +202,6 @@ function addPlacesToResultSidebar(places){
 
         var cardTitle = $(document.createElement('h5')).attr({"class":"card-title"});
         var cardText = $(document.createElement('p')).attr({"class":"card-text"});
-
         
         var submitButton = $(document.createElement('input')).attr({"id": place.name + "_id" , "class":"btn btn-primary card-button", "type":"submit", "value":"Save to Itinerary"});
         var directionsButton = $(document.createElement('input')).attr({"class":"btn btn-primary card-button", "type":"submit", "value":"View Directions"});
@@ -233,7 +229,7 @@ function addPlacesToResultSidebar(places){
         placeCard.hover(function(){
           $(this).css('cursor','pointer');
         });
-        
+
         submitButton.click(function(){
           var request = $.ajax({
               type:"POST",
@@ -255,10 +251,10 @@ function addPlacesToResultSidebar(places){
           request.fail(function(){
             alert("Unable to save loctaion, user not logged in"); // the message
           });
-            
+
           $(this).hide();
         });
-        
+
       }else{
         throw new Error("A location in the places list doesn't contain location data.");
       }
@@ -267,7 +263,7 @@ function addPlacesToResultSidebar(places){
   return resultList;
 }
 
-//compares the name of a google maps place object and a markers title which contains the name of its location. returns true if the name matches, otherwise false  
+//compares the name of a google maps place object and a markers title which contains the name of its location. returns true if the name matches, otherwise false
 function containsMarker(place, markerList){
   for (const obj of markerList){
     if(place.name == obj.title){
@@ -287,7 +283,7 @@ function placeListHas(place, placesList){
   return false;
 }
 
-//combines two arrays that contain google maps api location data 
+//combines two arrays that contain google maps api location data
 function concatResults(placesListA, placesListB){
   var result = placesListA;
   for(const placeB of placesListB){
@@ -299,7 +295,7 @@ function concatResults(placesListA, placesListB){
   return result;
 }
 
-//clears the markers on the map and the result list and the arrays storing the locations, markers, and result list, 
+//clears the markers on the map and the result list and the arrays storing the locations, markers, and result list,
 function cleanUp(){
   //clean up previous search if any
   // Deletes markers on the map from previous search result.

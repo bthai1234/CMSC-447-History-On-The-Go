@@ -2,43 +2,52 @@
 <html>
 <!-- These are the headers for what the title of this login page will be and what the code should reference-->
 <head>
-	<link rel="stylesheet" href="style1.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<title>Login Page</title>
-	{% load static %}
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Login Page</title>
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/login.css' %}">
 </head>
 <body>
-	<div class="container" id="container">
-		<div class="form-container log-in-container">
+<div class="container" id="container">
+    <div class="form-container log-in-container">
 
-		<!-- This is for the form that the user submits to login, will need to link with our database -->
-			<form action="" method="POST">
-				{% csrf_token %}
-				<h1>Login</h1>
-				<!-- This contains the section for the social media logins, facebook and twitter -->
-				<div class="social-container">
-					<a href="https://www.facebook.com/" class="social"><i class="fa fa-facebook fa-2x"></i></a>
-					<a href="https://twitter.com/" class="social"><i class="fab fa fa-twitter fa-2x"></i></a>
-				</div>
-				<span>or use your account</span>
-				<input type="text" name="username" placeholder="Username" />
-				<input type="password" name="password" placeholder="Password" />
-				<a href="#">Forgot your password?</a>
-				<button>Log In</button>
-			</form>
-		</div>
-		<div class="overlay-container">
-			<div class="overlay">
-				<div class="overlay-panel overlay-right">
-					<h1>History on the Go</h1>
-					<!-- This button once clicked directs you to the register page-->
-					<button2 onClick="window.location.href= {% url 'tour_app:registerPage' %}  ">
-						Register Here
-						</button2>
-				</div>
-			</div>
-		</div>
-	</div>
+        <!-- This is for the form that the user submits to login, will need to link with our database -->
+        <form action="" method="POST">
+            {% csrf_token %}
+            <h1>Login</h1>
+            <!-- This contains the section for the social media logins, facebook and twitter -->
+            <div class="social-container">
+                <a href="https://www.facebook.com/" class="social"><i class="fa fa-facebook fa-2x"></i></a>
+                <a href="https://twitter.com/" class="social"><i class="fab fa fa-twitter fa-2x"></i></a>
+            </div>
+            <span>or use your account</span>
+            <input type="text" name="username" placeholder="Username"/>
+            <input type="password" name="password" placeholder="Password"/>
+            <ul class="messages">
+                {% for message in messages %}
+                <li
+                        {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+            <a href="#">Forgot your password?</a>
+            <button>Log In</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-right">
+                <h1>History on the Go</h1>
+                <!-- This button once clicked directs you to the register page-->
+                <button2 onClick="window.location.href={% url 'tour_app:registerPage' %};">
+                    Register Here
+                </button2>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
