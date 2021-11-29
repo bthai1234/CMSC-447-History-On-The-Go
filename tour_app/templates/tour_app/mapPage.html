@@ -10,11 +10,6 @@
     
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/mapStyle.css' %}">
-    <!--Loads google map api-->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
     <script src="{% static "tour_app/google_map.js" %}"></script> 
   </head>
   <body>
@@ -48,4 +43,11 @@
         </div>
       </div>
     </div>
+
+    {% load static %}
+    <!--Loads google map api-->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
   </body>
