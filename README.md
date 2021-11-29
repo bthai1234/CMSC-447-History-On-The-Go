@@ -2,6 +2,9 @@
 
 Historical tours: A web app where users can select historical figures/events and the application will generate a list of sites nearby the user with historical relevance to the selected figure/event. For the sake of simplicity, the MVP of this system will be limited to a small collection of historical figures.
 
+### An example of this App is deployed to a Heroku instance and can be accessed by the following url:  
+https://history-on-the-go.herokuapp.com/
+
 ### Directions how to run the webapp locally using the django test server:
 
 ##### Mac:
@@ -36,6 +39,9 @@ Historical tours: A web app where users can select historical figures/events and
 
 The django a tests.py file can be found in the tour_app directory and can be ran by calling the following command in the root project directory  
  `python manage.py test tour_app`
+ 
+Tests for the intinerary back end can be ran using:
+ `python ./manage.py test tour_app.tests.itineraryTests`
 
 The some of the javascript unit tests for the google maps api implementation can be found the the tour_app\js_tests and can be ran by running the django test server and going to the url below:  
 `python manage.py runserver`

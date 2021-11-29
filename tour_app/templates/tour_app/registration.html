@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<!-- Header of the html file for registration page -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Registration Form</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'tour_app/registration.css' %}">
+    <script src="{% static 'tour_app/registration.js' %}"></script>
+</head>
+
+
+<body>
+<div class="wrapper">
+    <h2>Registration</h2>
+    <!-- This is where the user submits a form to register, will need to link with backend. -->
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="input-box">
+            <!--            <label>Enter your name</label>-->
+            <!--            {{regis_form.username}}-->
+            <input id="username" class="input-box" type="text" name="{{ regis_form.username.name }}" {% if
+                   regis_form.username.value
+                   %}value="{{ regis_form.username.value }}" placeholder="Username"/>
+
+        </div>
+        <div class="input-box">
+            <!--            <label>Enter your email</label>-->
+            <!--            {{regis_form.email}}-->
+            <input id="email" class="input-box" type="email" name="{{ regis_form.email.name }}" {% if
+                   regis_form.email.value
+                   %}value="{{ regis_form.email.value }}" placeholder="Email"/>
+
+        </div>
+        <div class="input-box">
+            <!--            <label>Create password</label>-->
+            <!--            {{regis_form.password1}}-->
+            <input class="input-box" type="password" name="{{ regis_form.password1.name }}" {% if
+                   regis_form.password1.value
+                   %}value="{{ regis_form.password1.value }}" placeholder="Password"/>
+
+        </div>
+        <div class="input-box">
+            <!--            <label>Confirm password</label>-->
+            <!--            {{regis_form.password2}}-->
+            <input class="input-box" type="password" name="{{ regis_form.password2.name }}" {% if
+                   regis_form.password2.value
+                   %}value="{{ regis_form.password2.value }}" placeholder="Retype Password"/>
+
+        </div>
+
+        <ul class="messages">
+            {% for message in messages %}
+            <li
+                    {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="policy">
+            <input id="policyCheck" type="checkbox">
+            <h3>I accept all terms & condition</h3>
+        </div>
+        <div class="input-box button">
+            <input id="submitBt" type="Submit" value="Register Now" onchange="isValid">
+        </div>
+        <div class="text">
+            <!-- If the user already has an account, it redirects back to the login page. -->
+            <h3>Already have an account? <a href={% url 'tour_app:loginPage' %}>Login now</a></h3>
+        </div>
+        <div class="text">
+            {{ regis_form.errors }}
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

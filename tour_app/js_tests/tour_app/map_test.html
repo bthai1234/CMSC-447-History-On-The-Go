@@ -5,14 +5,17 @@
     <title>Test Suite</title>
     <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.17.2.css">
     <script src="https://code.jquery.com/qunit/qunit-2.17.2.js"></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {% load static %}
 
-    <!--Displays google maps-->
+    <!--Loads google map api-->
     <script
-        src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
-        async
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
+      async
     ></script>
-    <script src="{% static "tour_app/google_map.js" %}"></script>
+    <script src="{% static "tour_app/google_map.js" %}"></script> 
     <script type="text/javascript">
         QUnit.module('Google_maps', function() {
             var searchKeyword = "george washington Historical"
@@ -103,8 +106,12 @@
                         done();
                     });
 
-                    testResultList = addPlacesToResultSidebar(locationList);
-                    assert.notEqual(testResultList.getElementsByTagName('li').length, 0, "result list html tag is empty and has no results appened");
+                    
+
+                    addPlacesToResultSidebar(locationList);
+                    var testResultList =  document.getElementById("places");
+                    
+                    assert.notDeepEqual($(".card"), null, "result list html tag is empty and has no results appened, when it should have results in it");
                     cleanUp();
                 }catch(e){
                     assert.ok(false, e);
@@ -149,9 +156,8 @@
                 cleanUp();
                 assert.deepEqual(markerList, [], "Array is not empty like it should be");
                 assert.deepEqual(placesList, [], "Array is not empty like it should be");
-                assert.deepEqual(search_radus, '25000', "Array is not empty like it should be");
                 testResultList = document.getElementById("places");
-                assert.deepEqual(testResultList.getElementsByTagName('li').length, 0, "result list html tag is empty and has no results appened");
+                assert.deepEqual(testResultList.getElementsByTagName('div').length, 0, "result list html tag is empty and has no results appened");
             });
 
             QUnit.test('test_loadMapMarkersAndPlaces()', async function(assert) {
@@ -161,7 +167,7 @@
                     assert.notEqual(markerList.length, 0, "marker array not poulated with places");
                     assert.notEqual(placesList.length, 0, "location array not poulated with places");
                     testResultList = document.getElementById("places");
-                    assert.notEqual(testResultList.getElementsByTagName('li').length, 0, "result list html tag is empty and has no results appened");
+                    assert.notDeepEqual($(".card"), null, "result list html tag is empty and has no results appened, when it should have results in it");
                     cleanUp();
                 }catch(e){
                     assert.ok(false, e);
@@ -175,18 +181,35 @@
 
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
-    <!--Search Results sidebar-->
+   
     <div id="container">
-        <div id="map"></div>
-        <div id="sidebar">
+      <!--displays google maps-->
+      <div id="map"></div>
+      <!--Search Results sidebar-->
+      <div id="sidebar">
         <!--Search box-->
         <div id ="input_container">
-            <input id="map-input-Figure" class="controls" type="text" placeholder="Enter Historical Figure"/>
-            <input id="map-input-address" class="controls" type="text" placeholder="Enter Search Address"/>
-            <input id="searchSubmitButton" type="button" value="Search Based on Historical Figure">
+          <label class ="form-label" for="Figure">Enter a Historical Figure: </label>
+          <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
+          <label class ="form-label" for="address">Enter Address to Search from: </label>
+          <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
+          {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
+          <div>
+            <label class ="form-label" for="radius">Search Radius (km): </label>
+            <select id="map-input-radius" class="form-control" name="radius">
+              <option class="map-input-option" value="5">5</option>
+              <option class="map-input-option" value="10">10</option>
+              <option class="map-input-option" value="25">25</option>
+              <option class="map-input-option" value="50">50</option>
+              <option class="map-input-option" value="100">100</option>
+            </select>
+          </div>
+          <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
         </div>
         <h2>Results</h2>
-        <ul id="places"></ul>
+        <div id="places" class="places_list">
+        {% csrf_token %}
         </div>
+      </div>
     </div>
 </body>
