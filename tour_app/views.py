@@ -137,5 +137,5 @@ def saveLocation(request):
         return response  # Sending an success response
     else:
         response = JsonResponse({"message": "Can not save location to initnerary, user not logged in."})
-        response.status_code = 200
+        response.status_code = 403  
         return response

@@ -7,12 +7,12 @@ let directionsRenderer;
 
 var placesList = [];//Stores the array of locations returned from the google maps API
 var markerList = [];//Stores the list of markers that have been placed on the map
-var resultList = [];//Stores the list of HTML <li> list elements shown in the sidebar result list with id = 'places'
+var resultList = [];//Stores the list of HTML <li> list elements shown in the sidebar result list with id = 'places'  
 var searchlocation = "";
 
 function initMap() {
   //initialize the base map from google map api.
-  searchlocation = { lat: 39.290385, lng: -76.612189 }; //default location baltimore eventual todo: gett location based on user gps
+  searchlocation = { lat: 39.290385, lng: -76.612189 }; //default location baltimore eventual todo: gett location based on user gps  
   if(!document.getElementById("map")){ throw new Error('HTML element with id = map not found');}
   map = new google.maps.Map(document.getElementById("map"), {
     center: searchlocation,
@@ -26,7 +26,6 @@ function initMap() {
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
   directionsRenderer.setPanel(document.getElementById("directions"));
-
   try{
     getSearchBox();
   }catch(e){
@@ -44,7 +43,6 @@ function getSearchBox(){
   var searchBox = new google.maps.places.SearchBox(input_address);
   searchlocation = "";
   var input_figure = "";
-
   //event Listener for the button with id searchSubmitButton and
   //gets the values in the search box and
   //calls the loadMapMarkersAndPlaces()
@@ -75,7 +73,7 @@ function getSearchBox(){
       $("#searchSubmitButton").click();
     }
   });
-
+  
 
   var inputs = {
     address: document.getElementById("map-input-address"),
@@ -114,11 +112,10 @@ async function loadMapMarkersAndPlaces(searchlocation, input_figure){
 
   addMarkers(placesList, map); //adds all markers to the map
   addPlacesToResultSidebar(placesList); //add location names to the sidebar result list if one is defined in the HTML with the <ul id="places"></ul> tag
-
   var home_icon_url = document.getElementById("start-location-marker").textContent;
   //add specific special marker icon for original search position
-  const icon = {
-    url: home_icon_url,
+  const icon = { 
+    url: home_icon_url, 
     scaledSize: new google.maps.Size(40, 40),
     origin: new google.maps.Point(0, 0),
     anchor: new google.maps.Point(0, 40),
@@ -205,11 +202,10 @@ function addPlacesToResultSidebar(places){
 
         var cardTitle = $(document.createElement('h5')).attr({"class":"card-title"});
         var cardText = $(document.createElement('p')).attr({"class":"card-text"});
-
-
+        
         var submitButton = $(document.createElement('input')).attr({"id": place.name + "_id" , "class":"btn btn-primary card-button", "type":"submit", "value":"Save to Itinerary"});
         var directionsButton = $(document.createElement('input')).attr({"class":"btn btn-primary card-button", "type":"submit", "value":"View Directions"});
-
+        
         cardHeader.text(place.name);
         cardText.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         cardTitle.text(place.name);
@@ -247,9 +243,9 @@ function addPlacesToResultSidebar(places){
               }
           });
 
-          request.done(function( data )
+          request.done(function( data ) 
           {
-            //alert(data.message);
+            //alert(data.message); 
           });
 
           request.fail(function(){
