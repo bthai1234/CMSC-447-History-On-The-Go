@@ -6,59 +6,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'tour_app/style.css' %}">
-    <!--Loads google map api-->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
-    <script src="{% static "tour_app/google_map.js" %}"></script> 
   </head>
   <body>
-    <div id="container">
-      <!--displays google maps-->
-      <div id="map"></div>
-      <!--Search Results sidebar-->
-      <div id="sidebar">
-        <div class="row justify-content-between">
-            {% comment %} Show profile button only if the auther is logged into the application {% endcomment %}
-            {% if user.is_authenticated %}
-              <div class="col">
-                <a href="profile" class="btn btn-md btn-info">Profile</a>
-                <a href="logout" class="btn">Log Out</a>
-              </div>
-            {% else %}
-              <div class="col-9">
-                <a href="login/" class="btn btn-md btn-warning">Login</a>
-              </div>
-              <div class="col-3">
-                <a href="register/" class="btn btn-md btn-info">Register</a>
-              </div>
-            {% endif %}
-        <!--Search box-->
-        <div id ="input_container">
-          <label class ="form-label my-1" for="Figure">Enter a Historical Figure: </label>
-          <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
-          <label class ="form-label my-1" for="address">Enter Address to Search from: </label>
-          <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
-          <div>
-            <label class ="form-label" for="radius">Search Radius (km): </label>
-            <select id="map-input-radius" class="form-control" name="radius">
-              <option class="map-input-option" value="5">5</option>
-              <option class="map-input-option" value="10">10</option>
-              <option class="map-input-option" value="25">25</option>
-              <option class="map-input-option" value="50">50</option>
-              <option class="map-input-option" value="100">100</option>
-            </select>
-          </div>
-          <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
-        </div>
-        <h2>Results</h2>
-        <div id="places" class="places_list">
-        {% csrf_token %}
-        </div>
-      </div>
-    </div>
+  <h3>HomePage</h3>
+  <a href= {% url 'tour_app:mapPage' %}>to Map Page</a>
+
   </body>
