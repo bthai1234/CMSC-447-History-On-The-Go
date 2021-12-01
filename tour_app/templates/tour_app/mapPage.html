@@ -23,11 +23,11 @@
         <div class="row">
           <div class="col">
           {% if user.is_authenticated %}
-            <a href="../profile/" class="btn btn-info">Profile</a>
-            <a href="../logout/" class="btn btn-warning">Logout</a>
+            <a href="{% url 'tour_app:profile' %}" class="btn btn-info">Profile</a>
+            <a href="{% url 'tour_app:logout' %}" class="btn btn-warning">Logout</a>
           {% else %}
-            <a href="../login/" class="btn btn-info">Login</a>
-            <a href="../register/" class="btn btn-warning">Register</a>  
+            <a href="{% url 'tour_app:loginPage' %}" class="btn btn-info">Login</a>
+            <a href="{% url 'tour_app:registerPage' %}" class="btn btn-warning">Register</a>  
           {% endif %}
           </div>
         </div>

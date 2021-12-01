@@ -7,7 +7,7 @@ from tour_app.models import Itinerary
 from .forms import RegisterUserForm
 from django.contrib import messages
 from django.urls import reverse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from tour_app.models import Itinerary, Itinerary_location
@@ -150,4 +150,4 @@ def saveLocation(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "You have logged out")
-    return render(request, "tour_app/mapPage.html", {})
+    return redirect("tour_app:mapPage")
