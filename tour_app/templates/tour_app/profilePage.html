@@ -15,13 +15,53 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
   <title>Profile</title>
+  {% load static %}
 </head>
 <body>
   <h1>Profile Page</h1>
+
   <div class="row">
     <div class="col-12 mb-4">
       <a href="{% url 'tour_app:mapPage' %}" class="btn btn-warning">Back to Map Page</a>
-      <div class="card border-light">Username: {{ user.username }}</div>
+
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <h3>Profile Information</h3>
+          <div class="col-6 mb-3">
+            <label for="first-name">First Name</label>
+            <input name="first-name" class="form-control" type="text" 
+                   placeholder="Enter your first name" value="{{ user.first_name }}" required>
+          </div>
+          <div class="col-6 mb-3">
+            <label for="last-name">Last Name</label>
+            <input name="last-name" class="form-control" type="text" 
+                   placeholder="Enter your last name" value="{{ user.last_name }}" required>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label for="username">Username</label>
+            <input name="username" class="form-control" type="text"
+                   value="{{ user.username }}" readonly>
+          </div>
+          <div class="col-6 mb-3">
+            <label for="email">Email</label>
+            <input name="email" class="form-control" type="text" 
+                   placeholder="Enter your email" value="{{ user.email }}" required>
+          </div>
+        </div>
+
+        <h3>Address Information</h3>
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label for="address">Address</label>
+            <input name="address" class="form-control" type="text"
+                   placeholder="Home Address" value="{{ userlocation.address }}" required>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </body>

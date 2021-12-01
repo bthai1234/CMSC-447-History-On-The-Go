@@ -47,12 +47,18 @@ class UserLocation(models.Model):
     Attributes:
         - id (PRIMARY KEY)
         - address (NOT NULL)
+        - city (NOT NULL)
+        - zipcode (NOT NULL)
+        - zip_ext (nullable, can be blank)
     """
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE
     )
     address = models.CharField(max_length=200)
+    city = models.CharField(max_length=90, default="")
+    zipcode = models.CharField(max_length=5, default="00000")
+    zip_ext = models.CharField(max_length=4, blank=True)
 
 
 class HistoricalLocation(models.Model):

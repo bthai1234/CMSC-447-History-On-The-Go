@@ -8,12 +8,6 @@ class RegisterUserForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class ProfileForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['email', 'password']
-
-
 def form_validation_check(form) -> str:
     """If any error occurs in the form, return an error message
 
