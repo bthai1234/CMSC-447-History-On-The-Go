@@ -1,16 +1,10 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
-<<<<<<< HEAD
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RegisterUserForm, ProfileForm, form_validation_check
-=======
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, response
-
+from django.contrib.auth.decorators import login_required
 from tour_app.models import Itinerary
 from .forms import RegisterUserForm
->>>>>>> 059fa4c05764b886c4117b2baf0b46d66fd7ea02
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render
@@ -122,27 +116,18 @@ def index(request):
     return render(request, 'tour_app/index.html', context)
 
 
-<<<<<<< HEAD
-=======
 def mapPage(request):
     context = {
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
     return render(request, 'tour_app/mapPage.html', context)
 
 
->>>>>>> 059fa4c05764b886c4117b2baf0b46d66fd7ea02
 def map_test(request):
     context = {
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
     return render(request, 'tour_app/map_test.html', context)
 
 
-<<<<<<< HEAD
-def logout_request(request):
-    logout(request)
-    messages.info(request, "You have logged out")
-    return redirect("main:index")
-=======
 def saveLocation(request):
     if request.method == 'POST' and request.user.is_authenticated:
         user = request.user.username
@@ -161,4 +146,8 @@ def saveLocation(request):
         response = JsonResponse({"message": "Can not save location to initnerary, user not logged in."})
         response.status_code = 403  
         return response
->>>>>>> 059fa4c05764b886c4117b2baf0b46d66fd7ea02
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "You have logged out")
+    return render(request, "tour_app/mapPage.html", {})
