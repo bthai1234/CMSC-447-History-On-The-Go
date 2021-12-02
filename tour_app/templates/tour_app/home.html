@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+	<title>History on the Go</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</head>
+  
+
+<!--Logo-->
+<header>
+      <img class="logo" src="images/logo.png" >
+          <h1>History on the Go</h1>
+</header>
+
+<!--Nav bar with Home, Login and Register-->
+<body> 
+    <div class="header">
+        <div class="menu-bar">
+            <nav class="navbar navbar-expand-sm navbar-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <i class="fa fa-bars"></i>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                      <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a class="nav-link disabled" href="registration.html">Register</a>
+                    </li>
+                  </ul>
+                
+                </div>
+              </nav>
+        </div>
+    </div>
+</body>
+</head>
+
+<!--Search for historical figures and places-->
+<!--To do: Wider search bars; same line ; center-->
+<body>
+    <div class="container">
+                <input id="map-input-Figure" type="text" placeholder="Historical Figures"/>
+                <input id="map-input-address" type="text" placeholder="Historical Places" />
+                <div id="container " >
+
+                        <!--Options to search within a radius-->
+                        <p>
+                        </p>
+                        <label class ="form-label" for="radius">Search Radius (km): </label>
+                        <select id="map-input-radius" class="form-control" name="radius">
+                          <option class="map-input-option" value="5">5</option>
+                          <option class="map-input-option" value="10">10</option>
+                          <option class="map-input-option" value="25">25</option>
+                          <option class="map-input-option" value="50">50</option>
+                          <option class="map-input-option" value="100">100</option>
+                        </select>
+                    </div>
+                    <p></p>
+                    <button href="mapPage.html">Search</button>
+    </div>
+</body>
+		
