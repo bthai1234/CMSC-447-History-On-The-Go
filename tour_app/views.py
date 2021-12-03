@@ -110,8 +110,18 @@ def index(request):
 
 
 def mapPage(request):
-    context = {
-        "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
+    if request.method == 'POST':
+        context = {
+            "figure": request.POST['figure'],
+            "lat": request.POST['lat'],
+            "lng": request.POST['lng'],
+            "placeName": request.POST['placeName'],
+            "radius": request.POST['radius'],
+            "google_api_key": settings.GOOGLE_API_KEY
+            }
+    else:    
+        context = {"google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
+    
     return render(request, 'tour_app/mapPage.html', context)
 
 

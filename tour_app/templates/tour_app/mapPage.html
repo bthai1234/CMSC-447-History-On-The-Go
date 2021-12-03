@@ -10,7 +10,6 @@
     
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/mapStyle.css' %}">
-    <script src="{% static "tour_app/google_map.js" %}"></script> 
   </head>
   <body>
     <div id="start-location-marker" style="display:none"> {% static 'tour_app/images/map_home.png' %}</div>
@@ -21,10 +20,10 @@
       <div id="sidebar">
         <!--Search box-->
         <div id ="input_container">
-          <label class ="form-label" for="Figure">Enter a Historical Figure: </label>
+          <label class ="form-label" for="Figure">Enter a Historical Figure:</label>
           <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
           <label class ="form-label" for="address">Enter Address to Search from: </label>
-          <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
+          <input id="map-input-address" name="address" class="form-control controls" type="text" placeholder="Enter Search Address"/>
           {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
           <div>
             <label class ="form-label" for="radius">Search Radius (km): </label>
@@ -59,7 +58,21 @@
     {% load static %}
     <!--Loads google map api-->
     <script
-      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
-      async
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&v=weekly"
+      
     ></script>
+    <script src="{% static "tour_app/google_map.js" %}"></script>
+    <script>initMap(); </script> 
+    <script type="text/javascript">
+      {% if lat and lng %}
+        var figure = "{{figure|safe}}";
+        var lat = "{{lat|safe}}";
+        var lng = "{{lng|safe}}";
+        var placeName  = "{{placeName|safe}}";
+        var radius = "{{radius|safe}}";
+        $('#map-input-Figure').val(figure);
+        $('#map-input-address').val(placeName);
+        searchRequestFromPost(lat,lng,figure,radius);
+      {% endif %}
+    </script>
   </body>

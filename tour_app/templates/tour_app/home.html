@@ -55,8 +55,9 @@
 <!--To do: Wider search bars; same line ; center-->
 <body>
     <div class="container">
-                <input id="map-input-Figure" type="text" placeholder="Historical Figures"/>
-                <input id="map-input-address" type="text" placeholder="Historical Places" />
+              <form id="search-form" action="{% url 'tour_app:mapPage' %}" method="post">
+                <input id="map-input-Figure" name="map-input-Figure" type="text" placeholder="Historical Figures"/>
+                <input id="map-input-address" name="map-input-address" type="text" placeholder="Historical Places" />
                 <div id="container " >
 
                         <!--Options to search within a radius-->
@@ -70,9 +71,10 @@
                           <option class="map-input-option" value="50">50</option>
                           <option class="map-input-option" value="100">100</option>
                         </select>
-                    </div>
+                </div>
                     <p></p>
-                    <button href="mapPage.html">Search</button>
+                    <button type="submit" form="search-form" name="submit">Search</button>
+              </form>
     </div>
 </body>
 		
