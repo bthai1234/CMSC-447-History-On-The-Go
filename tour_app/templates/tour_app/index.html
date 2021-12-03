@@ -79,11 +79,11 @@
   </div>
 
   <script
-  src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=init&libraries=places&v=weekly"
-  async
+  src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&v=weekly"
   ></script>
   {% load static %}
   <div id="mapPageUrl" style="display:none"> {% url 'tour_app:mapPage' %}</div>
   <script src="{% static "tour_app/index.js" %}"></script> 
+  <script type="text/javascript">init();</script>
 </body>
 		
