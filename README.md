@@ -1,6 +1,6 @@
-# CMSC-447-Project-Historical-Tours
+# CMSC 447 Project: History On The Go!
 
-Historical tours: A web app where users can select historical figures/events and the application will generate a list of sites nearby the user with historical relevance to the selected figure/event. For the sake of simplicity, the MVP of this system will be limited to a small collection of historical figures.
+History On The Go: A web app where users can select historical figures/events and the application will generate a list of sites nearby the user with historical relevance to the selected figure/event. For the sake of simplicity, the MVP of this system will be limited to a small collection of historical figures.
 
 ### An example of this App is deployed to a Heroku instance and can be accessed by the following url:  
 https://history-on-the-go.herokuapp.com/
