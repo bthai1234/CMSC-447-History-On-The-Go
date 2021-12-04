@@ -347,3 +347,14 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, start, 
     })
     .catch((e) => window.alert("Directions request failed due to " + e.message));
 }
+
+
+function searchRequestFromPost(lat,lng,figure,radius){
+  searchlocation = { lat: parseFloat(lat), lng: parseFloat(lng)};
+  try{
+    loadMapMarkersAndPlaces(searchlocation, figure, radius);
+  }catch(e){
+    throw new Error(e);
+  }
+
+}

@@ -59,7 +59,21 @@
     {% load static %}
     <!--Loads google map api-->
     <script
-      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
-      async
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&v=weekly"
+      
     ></script>
+    <script src="{% static "tour_app/google_map.js" %}"></script>
+    <script>initMap(); </script> 
+    <script type="text/javascript">
+      {% if lat and lng %}
+        var figure = "{{figure|safe}}";
+        var lat = "{{lat|safe}}";
+        var lng = "{{lng|safe}}";
+        var placeName  = "{{placeName|safe}}";
+        var radius = "{{radius|safe}}";
+        $('#map-input-Figure').val(figure);
+        $('#map-input-address').val(placeName);
+        searchRequestFromPost(lat,lng,figure,radius);
+      {% endif %}
+    </script>
   </body>
