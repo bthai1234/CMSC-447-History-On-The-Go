@@ -1,0 +1,215 @@
+<!--Run dejango test server and got to */tests/map_test url to run-->
+<!DOCTYPE html>
+<meta charset="utf-8">
+ <head>
+    <title>Test Suite</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.17.2.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.17.2.js"></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% load static %}
+
+    <!--Loads google map api-->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+    <script src="{% static "tour_app/google_map.js" %}"></script> 
+    <script type="text/javascript">
+        QUnit.module('Google_maps', function() {
+            var searchKeyword = "george washington Historical"
+            var searchlocation = { lat: 38.907192, lng: -77.036871 };
+            var searchRadius = '25000';
+            var locationList;
+            var testMarkerList;
+            var testResultList;
+
+            QUnit.test('test_initMap()', function(assert) {
+                try{
+                    initMap();
+                    assert.ok( true, "boolean true");
+                }catch(e){
+                    assert.ok( false, e);
+                }
+            });
+
+            QUnit.test('test_getSearchBox()', function(assert) {
+                cleanUp();
+                try{
+                    document.getElementById("map-input-address").setAttribute('value', 'hello'); 
+                    document.getElementById("map-input-Figure").setAttribute('value', "world")
+                    var input = getSearchBox();
+                    assert.equal(document.getElementById("map-input-address").value, "hello", "address textbox value does not match expected value");
+                    assert.equal(document.getElementById("map-input-Figure").value, "world", "figure textbox value does not match expected value");
+                }catch(e){
+                    assert.ok(false, e);
+                }
+            });
+
+            QUnit.test('test_getPlaces()', async function(assert) {
+                const done = assert.async();
+                cleanUp();
+                try{
+                    await getPlaces(searchKeyword, searchlocation, searchRadius).then(function(results){
+                        locationList = results;
+                        
+                        assert.notEqual(locationList, null, "returned results is null");
+                        done();
+                    }, function(err){
+                        throw new Error(err);
+                    });
+
+                }catch(e){
+                    assert.ok(false, e);
+                    done();
+                }
+            });
+
+            QUnit.test('test_addMarkers()', async function(assert) {
+                const done = assert.async();
+                cleanUp();
+                try{
+                    await getPlaces(searchKeyword, searchlocation, searchRadius).then(function(results){
+                        locationList = results;
+                        done();
+                    }, function(err){
+                        throw new Error(err);
+                        done();
+                    });
+
+                    map = new google.maps.Map(document.getElementById("map"), {
+                        center: searchlocation,
+                        zoom: 15,
+                        mapId: "8d193001f940fde3", //b93bdcaff9612ab5
+                    });
+                    service = new google.maps.places.PlacesService(map);
+
+                    testMarkerList = addMarkers(locationList, map);
+                    assert.notEqual(testMarkerList, null, "returned markers is null");
+                    assert.notEqual(testMarkerList.length, 0, "returned markers is null");
+
+                }catch(e){
+                    assert.ok(false, e);
+                }
+            });
+
+            QUnit.test('test_addPlacesToResultSidebar()', async function(assert) {
+                const done = assert.async();
+                cleanUp();
+                try{
+                    await getPlaces(searchKeyword, searchlocation, searchRadius).then(function(results){
+                        locationList = results;
+                        done();
+                    }, function(err){
+                        throw new Error(err);
+                        done();
+                    });
+
+                    
+
+                    addPlacesToResultSidebar(locationList);
+                    var testResultList =  document.getElementById("places");
+                    
+                    assert.notDeepEqual($(".card"), null, "result list html tag is empty and has no results appened, when it should have results in it");
+                    cleanUp();
+                }catch(e){
+                    assert.ok(false, e);
+                }
+            });
+
+            QUnit.test('test_containsMarker()', function(assert) {
+                var test_MarkerList = [{title: "hello"}, {title: "world"}, {title: "goodbye world"}];
+                var test_place = {name: "world"};
+
+                assert.true(containsMarker(test_place, test_MarkerList), "function containsMarker() returned false when it should have returned true");
+            });
+
+            QUnit.test('test_placeListHas()', function(assert) {
+                var test_locationList = [{name: "hello"}, {name: "world"}, {name: "goodbye world"}];
+                var test_place = {name: "world"};
+
+                assert.true(placeListHas(test_place, test_locationList), "function placeListHas() returned false when it should have returned true");
+            });
+
+            QUnit.test('test_concatResults()', function(assert) {
+                var test_listA = [{name: "hello"}, {name: "world"}, {name: "goodbye world"}];
+                var test_listB = [{name: "happy"}, {name: "birthday"}];
+                var expected_size = (test_listA.length + test_listB.length);
+                var results = concatResults(test_listA, test_listB);
+                var test_bool = true;
+
+                assert.equal(results.length, expected_size, "The combined array does not have the correct length");
+                for(var i = 0; i < 5; i++){
+                    if(i < 3 && (test_listA[i].name != results[i].name)){
+                        test_bool = false;
+                    }else if(i > 2 && (test_listB[i - 3].name != results[i].name)){
+                        test_bool = false;
+                    }
+                }
+                assert.true(test_bool, 'contents of array are not what they should be');
+            });
+
+            QUnit.test('test_cleanUp()', async function(assert) {
+
+                await loadMapMarkersAndPlaces(searchlocation, "george washington");
+                cleanUp();
+                assert.deepEqual(markerList, [], "Array is not empty like it should be");
+                assert.deepEqual(placesList, [], "Array is not empty like it should be");
+                testResultList = document.getElementById("places");
+                assert.deepEqual(testResultList.getElementsByTagName('div').length, 0, "result list html tag is empty and has no results appened");
+            });
+
+            QUnit.test('test_loadMapMarkersAndPlaces()', async function(assert) {
+                try{
+                    cleanUp();
+                    await loadMapMarkersAndPlaces(searchlocation, "george washington");
+                    assert.notEqual(markerList.length, 0, "marker array not poulated with places");
+                    assert.notEqual(placesList.length, 0, "location array not poulated with places");
+                    testResultList = document.getElementById("places");
+                    assert.notDeepEqual($(".card"), null, "result list html tag is empty and has no results appened, when it should have results in it");
+                    cleanUp();
+                }catch(e){
+                    assert.ok(false, e);
+                }
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+   
+    <div id="container">
+      <!--displays google maps-->
+      <div id="map"></div>
+      <!--Search Results sidebar-->
+      <div id="sidebar">
+        <!--Search box-->
+        <div id ="input_container">
+          <label class ="form-label" for="Figure">Enter a Historical Figure: </label>
+          <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
+          <label class ="form-label" for="address">Enter Address to Search from: </label>
+          <input id="map-input-address" name="address" class="form-control" type="text" placeholder="Enter Search Address"/>
+          {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
+          <div>
+            <label class ="form-label" for="radius">Search Radius (km): </label>
+            <select id="map-input-radius" class="form-control" name="radius">
+              <option class="map-input-option" value="5">5</option>
+              <option class="map-input-option" value="10">10</option>
+              <option class="map-input-option" value="25">25</option>
+              <option class="map-input-option" value="50">50</option>
+              <option class="map-input-option" value="100">100</option>
+            </select>
+          </div>
+          <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
+        </div>
+        <h2>Results</h2>
+        <div id="places" class="places_list">
+        {% csrf_token %}
+        </div>
+      </div>
+    </div>
+</body>

@@ -1,0 +1,59 @@
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  height: 100%;
+  display: flex;
+}
+
+#sidebar {
+  flex-basis: 5rem;
+  flex-grow: 1;
+  padding: 1rem;
+  max-width: 30rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#places{
+  height: 100%;
+  width: 100%;
+  /*overflow-y: scroll;*/
+}
+
+#directions{
+  height: 100%;
+  width: 100%;
+  /*overflow-y: scroll;*/
+}
+
+#map {
+  flex-basis: 0;
+  flex-grow: 4;
+  height: 100%;
+}
+
+.card{
+  margin-right: 5px;
+  margin-bottom: 10px;
+  /*box-shadow: 2px 3px #888888;*/
+}
+
+.form-control{
+  margin-bottom: 10px;
+}
+
+.tab-content{
+  padding-top: 5px;
+  overflow-y: scroll;
+}
+
+.card-button{
+  margin-right: 2px;
+}
