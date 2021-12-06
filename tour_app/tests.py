@@ -86,6 +86,8 @@ class BaseCase(TestCase):
         self.registerPage = reverse('tour_app:registerPage')
         self.loginPage = reverse('tour_app:loginPage')
         self.index = reverse('tour_app:index')
+        self.mapPage = reverse('tour_app:mapPage')
+        
         self.c = Client()
         # Register test user though the register page view
         self.c.post(reverse('tour_app:registerPage'),
@@ -192,3 +194,43 @@ class LoginPageTest(BaseCase):
         self.assertEqual(response.status_code, 200)
 
 ################################################ End of LoginPageTest class ############################################
+
+
+#Index Page Tests
+class IndexPageTest(BaseCase):
+    # This test is to test if the index page loads correctly from the home page
+    def test_load_index_page(self):
+        response = self.client.get(self.index)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'tour_app/index.html')
+        
+        
+    #This tests if the login page loads correctly from the home page
+    def test_loginpage(self):
+        # response = self.client.get(reverse('tour_app:loginPage'))
+        response = self.client.post(self.loginPage)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'tour_app/login.html')
+     
+     
+     #this test if the register page loads correctly from the home page  
+          
+    def test_registerpage(self):
+          response = self.client.get(self.registerPage)
+          self.assertEquals(response.status_code, 200)
+          self.assertTemplateUsed(response, 'tour_app/registration.html')
+          
+    
+    #This tests if the map page loads correctly from the home page.  
+    def test_map_page(self):
+            # response = self.client.get(reverse('tour_app:registerPage'))
+          response = self.client.get(self.mapPage)
+          self.assertEquals(response.status_code, 200)
+          self.assertTemplateUsed(response, 'tour_app/mapPage.html')
+          
+        
+        
+        
+    
+        
+    
