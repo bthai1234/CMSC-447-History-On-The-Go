@@ -37,10 +37,12 @@ https://history-on-the-go.herokuapp.com/
 
 ### Test Suits:
 
-The django a tests.py file can be found in the tour_app directory and can be ran by calling the following command in the root project directory  
+The django a tests.py file can be found in the tour_app directory and can be ran by calling the following commands in the root project directory
+ `python manage.py collectstatic`
  `python manage.py test tour_app`
  
 Tests for the intinerary back end can be ran using:
+ `python manage.py collectstatic`
  `python ./manage.py test tour_app.tests.itineraryTests`
 
 The some of the javascript unit tests for the google maps api implementation can be found the the tour_app\js_tests and can be ran by running the django test server and going to the url below:  
