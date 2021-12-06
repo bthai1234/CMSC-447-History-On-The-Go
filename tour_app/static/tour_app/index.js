@@ -1,4 +1,3 @@
-
 var searchlocation = "";
 
 function init() {
@@ -35,7 +34,7 @@ function init() {
         var csrf = $(document.createElement("input")).attr({'type': "hidden", 'name': 'csrfmiddlewaretoken', 'value': csrftoken});
 
         form.append(latForm,lngForm,place_name,figure,radius,csrf);
-        $('#container').append(form);
+        $('body').append(form);
         form.submit();
 
     });
