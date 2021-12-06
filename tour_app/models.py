@@ -51,12 +51,6 @@ class UserLocation(models.Model):
         - zipcode (NOT NULL)
         - zip_ext (nullable, can be blank)
     """
-    # populate the list with the necessary states and indexing starting from 1
-    STATE_LIST = []
-    with open('tour_app/us_states.txt') as f:
-        for i, line in enumerate(f):
-            STATE_LIST.append((i + 1, line.strip()))
-    
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE
