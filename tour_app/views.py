@@ -1,10 +1,15 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
+<<<<<<< HEAD
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, response
 from django.contrib.auth.decorators import login_required
 from tour_app.models import Itinerary
 from .forms import RegisterUserForm
+=======
+from django.http import HttpResponse, HttpResponseRedirect
+from .forms import RegisterUserForm, ProfileForm, form_validation_check
+>>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -110,12 +115,18 @@ def profilePage(request):
     return render(request, 'tour_app/profilePage.html', {})
 
 
+
+def profilePage(request):
+    pass
+
+
 def index(request):
     context = {
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
     return render(request, 'tour_app/index.html', context)
 
 
+<<<<<<< HEAD
 
 def mapPage(request):
     if request.method == 'POST':
@@ -134,6 +145,8 @@ def mapPage(request):
 
 
 
+=======
+>>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
 def map_test(request):
     context = {
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file

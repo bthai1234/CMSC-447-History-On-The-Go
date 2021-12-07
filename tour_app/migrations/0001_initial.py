@@ -11,6 +11,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+<<<<<<< HEAD
+=======
+        ('auth', '0012_alter_user_first_name_max_length'),
+>>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
     ]
 
     operations = [
@@ -30,9 +34,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Itinerary',
             fields=[
+<<<<<<< HEAD
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('itinerary_name', models.CharField(max_length=100)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+=======
+                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='auth.user')),
+                ('itinerary_name', models.CharField(max_length=100)),
+>>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
             ],
         ),
         migrations.CreateModel(
@@ -43,6 +52,7 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
+<<<<<<< HEAD
         migrations.CreateModel(
             name='Itinerary_location',
             fields=[
@@ -53,4 +63,6 @@ class Migration(migrations.Migration):
                 ('itinerary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tour_app.itinerary')),
             ],
         ),
+=======
+>>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
     ]
