@@ -43,15 +43,19 @@ function getSearchBox(){
   var searchBox = new google.maps.places.SearchBox(input_address);
   searchlocation = "";
   var input_figure = "";
+
   //event Listener for the button with id searchSubmitButton and
   //gets the values in the search box and
   //calls the loadMapMarkersAndPlaces()
   document.getElementById("searchSubmitButton").addEventListener("click", function() {
     searchlocation = searchBox.getPlaces()[0].geometry.location; //retrieves the search
     input_figure = document.getElementById("map-input-Figure").value;
+    let radiusSelect = document.getElementById("map-input-radius");
+    // Value needs to multipled by 1000 to get meters -> kilometers
+    let searchRadius = parseInt(radiusSelect.value) * 1000;
 
     try{
-        loadMapMarkersAndPlaces(searchlocation, input_figure);
+        loadMapMarkersAndPlaces(searchlocation, input_figure, searchRadius);
     }catch(e){
       throw new Error(e);
     }
@@ -84,12 +88,9 @@ function getSearchBox(){
 
 
 //calls the google api and loads map markers by calling the getPlaces, addmarkers, and the addPlacesToResultSidebar functions
-async function loadMapMarkersAndPlaces(searchlocation, input_figure){
+async function loadMapMarkersAndPlaces(searchlocation, input_figure, searchRadius){
   cleanUp();//clears data from previous search
 
-  let radiusSelect = document.getElementById("map-input-radius");
-  // Value needs to multipled by 1000 to get meters -> kilometers
-  let searchRadius = parseInt(radiusSelect.value) * 1000;
 
   //perform multiple searches with diffrent keywords, and combine each result
   await getPlaces(input_figure + " historical", searchlocation, searchRadius).then(function(results){
@@ -346,4 +347,15 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, start, 
       directionsRenderer.setDirections(response);
     })
     .catch((e) => window.alert("Directions request failed due to " + e.message));
+}
+
+
+function searchRequestFromPost(lat,lng,figure,radius){
+  searchlocation = { lat: parseFloat(lat), lng: parseFloat(lng)};
+  try{
+    loadMapMarkersAndPlaces(searchlocation, figure, radius);
+  }catch(e){
+    throw new Error(e);
+  }
+
 }

@@ -1,6 +1,6 @@
-# CMSC-447-Project-Historical-Tours
+# CMSC 447 Project: History On The Go!
 
-Historical tours: A web app where users can select historical figures/events and the application will generate a list of sites nearby the user with historical relevance to the selected figure/event. For the sake of simplicity, the MVP of this system will be limited to a small collection of historical figures.
+History On The Go: A web app where users can select historical figures/events and the application will generate a list of sites nearby the user with historical relevance to the selected figure/event. For the sake of simplicity, the MVP of this system will be limited to a small collection of historical figures.
 
 ### An example of this App is deployed to a Heroku instance and can be accessed by the following url:  
 https://history-on-the-go.herokuapp.com/
@@ -37,10 +37,12 @@ https://history-on-the-go.herokuapp.com/
 
 ### Test Suits:
 
-The django a tests.py file can be found in the tour_app directory and can be ran by calling the following command in the root project directory  
+The django a tests.py file can be found in the tour_app directory and can be ran by calling the following commands in the root project directory
+ `python manage.py collectstatic`
  `python manage.py test tour_app`
  
 Tests for the intinerary back end can be ran using:
+ `python manage.py collectstatic`
  `python ./manage.py test tour_app.tests.itineraryTests`
 
 The some of the javascript unit tests for the google maps api implementation can be found the the tour_app\js_tests and can be ran by running the django test server and going to the url below:  
