@@ -1,15 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
-<<<<<<< HEAD
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, response
-from django.contrib.auth.decorators import login_required
-from tour_app.models import Itinerary
-from .forms import RegisterUserForm
-=======
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RegisterUserForm, ProfileForm, form_validation_check
->>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -19,6 +11,12 @@ from tour_app.models import Itinerary, Itinerary_location
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.utils.datastructures import MultiValueDictKeyError
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
+
+from .forms import RegisterUserForm, ProfileForm, form_validation_check
+from .models import UserLocation
 
 app_name = 'main'
 
@@ -110,14 +108,32 @@ def loginPage(request):
 
 
 # user profile form page
-@login_required(login_url=' tour_app/login/')
-def profilePage(request):
-    return render(request, 'tour_app/profilePage.html', {})
+@method_decorator(login_required(login_url="login"), name="dispatch")
+class ProfileView(View):
+    profile = None
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.profile, _ = UserLocation.objects.get_or_create(user=request.user)
+        return super(ProfileView, self).dispatch(request, *args, **kwargs)
 
+    def get(self, request):
+        context = {'profile': self.profile, 'segment': 'user_location'}
+        return render(request, 'tour_app/profilePage.html', context)
+    
+    def post(self, request):
+        form = ProfileForm(request.POST, request.FILES, instance=self.profile)
 
+        if form.is_valid():
+            profile = form.save()
+            profile.user.first_name = form.cleaned_data.get('first_name')
+            profile.user.last_name = form.cleaned_data.get('last_name')
+            profile.user.email = form.cleaned_data.get('email')
+            profile.user.save()
 
-def profilePage(request):
-    pass
+            messages.success(request, 'Profile saved successfully')
+        else:
+            messages.error(request, form_validation_check(form))
+        return redirect('/profile')
 
 
 def index(request):
@@ -125,8 +141,6 @@ def index(request):
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
     return render(request, 'tour_app/index.html', context)
 
-
-<<<<<<< HEAD
 
 def mapPage(request):
     if request.method == 'POST':
@@ -144,9 +158,6 @@ def mapPage(request):
     return render(request, 'tour_app/mapPage.html', context)
 
 
-
-=======
->>>>>>> 1ec7c79 (Created ProfileForm and parts of profileView)
 def map_test(request):
     context = {
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file

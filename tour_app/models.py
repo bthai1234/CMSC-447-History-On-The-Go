@@ -51,7 +51,7 @@ class UserLocation(models.Model):
         - zipcode (NOT NULL)
         - zip_ext (nullable, can be blank)
     """
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE
     )

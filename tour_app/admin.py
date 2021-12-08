@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Itinerary, Itinerary_location
+from django.contrib.auth.models import User
+from .models import Itinerary, Itinerary_location, UserLocation
 
 
 class Itinerary_locationInline(admin.StackedInline):
@@ -15,4 +16,4 @@ class ItineraryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Itinerary, ItineraryAdmin)
-
+admin.site.register(UserLocation)
