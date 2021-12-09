@@ -24,35 +24,15 @@ TODO List:
   {% comment %}Profile update user information form{% endcomment %}
   <div class="content">
     <div class="form-container" id="update-user-info">
-      <form action="" method="POST">
+      <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <h2>User Information</h2>
-        <label class="form-label" for="first_name">First Name</label>
-        <input class="form-input" name="first_name" value="{{ user.first_name }}" 
-          placeholder="Enter First Name" required>
-        <label class="form-label" for="last_name">Last Name</label>
-        <input class="form-input" name="last" value="{{ user.last_name }}" 
-          placeholder="Enter Last Name" required>
-        <label class="form-label" for="email">Email Address</label>
-        <input class="form-input" name="email" value="{{ user.email }}" 
-          placeholder="Enter Email" required>
-
-        <label id="address" class="form-label" for="address">Address</label>
-        <input class="form-input" name="address" value="{{ user_location.address }}" 
-          placeholder="Home Address" required>
-        <label id="city" class="form-label" for="City">City</label>
-        
-        <input class="form-input" name="city" value="{{ user_location.city }}" 
-          placeholder="City" required>
-        <br>
-        <label class="form-label" for="zipcode">Zip Code</label>
-        <input class="form-input" name="zipcode" value="{{ user_location.zipcode }}" 
-          placeholder="Zip Code" required>
-        <label class="form-label" for="zip_ext">Zip Ext</label>
-        <input class="form-input" name="zip_ext" value="{{ user_location.zip_ext }}" 
-          placeholder="Zip Ext">
+        <h2 class="subheader">User Information</h2>
+        {% for field in profile_form %}
+          <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+          {{ field }}
+        {% endfor %}
         <div>
-          <button type="submit" class="submit-btn">Update Information</button>
+          <input type="submit" class="submit-btn" value="Update">
         </div>
       </form>
     </div>
@@ -61,7 +41,7 @@ TODO List:
   {% comment %}Change password form{% endcomment %}
   <div class="content">  
     <div class="form-container" id="update-password">
-      <h2>Change Password</h2>
+      <h2 class="subheader">Change Password</h2>
       <form action="" method="POST">
         {% csrf_token %}
         <label class="form-label" for="current_password">Current Password</label>

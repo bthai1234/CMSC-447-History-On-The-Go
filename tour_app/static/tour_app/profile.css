@@ -12,6 +12,11 @@ h1 {
   margin: 0;
 }
 
+.subheader {
+  margin: 10px 0;
+  padding-left: 10px;
+}
+
 .content {
   width: 70%;
   /* border: 1px red solid; */
@@ -39,3 +44,4 @@ h1 {
 .submit-btn {
   font-size: 1em;
 }
+
