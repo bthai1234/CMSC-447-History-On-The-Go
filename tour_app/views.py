@@ -2,12 +2,12 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, response
-
+from django.contrib.auth.decorators import login_required
 from tour_app.models import Itinerary
-from .forms import RegisterUserForm
+from .forms import RegisterUserForm, ProfileForm, form_validation_check
 from django.contrib import messages
 from django.urls import reverse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from tour_app.models import Itinerary, Itinerary_location
@@ -15,6 +15,9 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.utils.datastructures import MultiValueDictKeyError
 
+from .models import Profile
+
+app_name = 'main'
 
 # Create your views here.
 def registerPage(request):
@@ -103,6 +106,20 @@ def loginPage(request):
     return render(request, 'tour_app/login.html', context)
 
 
+# user profile form page
+@login_required(login_url=' tour_app/login/')
+def profilePage(request):
+    if request.method == "POST":
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect("/profile")
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    context = {'profile_form': form}
+    return render(request, 'tour_app/profilePage.html', context)
+
+
 def index(request):
     context = {
         "google_api_key": settings.GOOGLE_API_KEY}  # Retrieves the google api key from the setting.py file which in turn gets the key from the ..env file
@@ -151,3 +168,8 @@ def saveLocation(request):
         response = JsonResponse({"message": "Can not save location to initnerary, user not logged in."})
         response.status_code = 403  
         return response
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "You have logged out")
+    return redirect("tour_app:mapPage")

@@ -41,18 +41,26 @@ class Itinerary_location(models.Model):
         return self.loc_name
 
 
-class UserLocation(models.Model):
-    """Stores a user's saved location
+class Profile(models.Model):
+    """Stores a user's information 
 
     Attributes:
         - id (PRIMARY KEY)
         - address (NOT NULL)
+        - city (NOT NULL)
+        - zipcode (NOT NULL)
+        - zip_ext (nullable, can be blank)
     """
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
+    user = models.OneToOneField(
+        User, 
         on_delete=models.CASCADE
     )
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
     address = models.CharField(max_length=200)
+    city = models.CharField(max_length=90, default="")
+    zipcode = models.CharField(max_length=5, default="")
 
 
 class HistoricalLocation(models.Model):

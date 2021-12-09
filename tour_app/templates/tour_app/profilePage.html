@@ -1,0 +1,61 @@
+{% comment %}
+TODO List:
+- Make a sidebar for navigation
+-
+-
+{% endcomment %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'tour_app/profile.css' %}">
+</head>
+
+<body>
+  <h1>Profile Page</h1>
+  {% comment %}Navigation button back to main content{% endcomment %}
+  <a href="{% url 'tour_app:mapPage' %}" class="nav-btn">Back to Map Page</a>
+
+  {% comment %}Profile update user information form{% endcomment %}
+  <div class="content">
+    <div class="form-container" id="update-user-info">
+      <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2 class="subheader">User Information</h2>
+        {% for field in profile_form %}
+          <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+          {{ field }}
+        {% endfor %}
+        <div>
+          <input type="submit" class="submit-btn" value="Update">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% comment %}Change password form{% endcomment %}
+  <div class="content">  
+    <div class="form-container" id="update-password">
+      <h2 class="subheader">Change Password</h2>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <label class="form-label" for="current_password">Current Password</label>
+        <input class="form-input" name="current_password" required>
+        <label class="form-label" for="new_password">New Password</label>
+        <input class="form-input" name="new_password" required>
+        <label class="form-label" for="verify_password">Verify Password</label>
+        <input class="form-input" name="verify_password">
+        <div>
+          <button type="submit" class="submit-btn">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
