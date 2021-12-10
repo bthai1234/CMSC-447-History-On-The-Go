@@ -18,6 +18,18 @@
         <div id="map"></div>
       <!--Search Results sidebar-->
       <div id="sidebar">
+        {% comment %}Profile button and login logout{% endcomment %}
+        <div class="row">
+          <div class="col">
+          {% if user.is_authenticated %}
+            <a href="{% url 'tour_app:profile' %}" class="btn btn-info">Profile</a>
+            <a href="{% url 'tour_app:logout' %}" class="btn btn-warning">Logout</a>
+          {% else %}
+            <a href="{% url 'tour_app:loginPage' %}" class="btn btn-info">Login</a>
+            <a href="{% url 'tour_app:registerPage' %}" class="btn btn-warning">Register</a>  
+          {% endif %}
+          </div>
+        </div>
         <!--Search box-->
         <div id ="input_container">
           <label class ="form-label" for="Figure">Enter a Historical Figure:</label>
@@ -61,6 +73,9 @@
       src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&v=weekly"
       
     ></script>
+<<<<<<< HEAD
+  </body>
+=======
     <script src="{% static "tour_app/google_map.js" %}"></script>
     <script>initMap(); </script> 
     <script type="text/javascript">
@@ -76,3 +91,4 @@
       {% endif %}
     </script>
   </body>
+>>>>>>> 33770d51e182c0e2b5cabeb3e232b1f49422ee6d
