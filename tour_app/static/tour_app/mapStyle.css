@@ -14,6 +14,7 @@ body {
 #sidebar_col{
   height: 98vh;
   max-height: 98vh;
+  overflow: auto ;
 }
 
 #places{
@@ -44,8 +45,8 @@ body {
 }
 
 #sidebarContent{
-  height: 70vh;
-  max-height: 70vh;
+  height: 68vh;
+  max-height: 68vh;
   overflow: scroll;
 }
 .card{
@@ -68,6 +69,7 @@ body {
 
 @media (max-width: 992px) {
   #mapContainer{
+    height: 50vh;
     min-height: 50vh;
   }
 
