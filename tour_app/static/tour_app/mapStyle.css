@@ -6,19 +6,14 @@ body {
   padding: 0;
 }
 
-#container {
-  height: 100%;
-  display: flex;
+#sidebar {
+  padding: 1rem;
+
 }
 
-#sidebar {
-  flex-basis: 5rem;
-  flex-grow: 1;
-  padding: 1rem;
-  max-width: 30rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+#sidebar_col{
+  height: 98vh;
+  max-height: 98vh;
 }
 
 #places{
@@ -39,6 +34,20 @@ body {
   height: 100%;
 }
 
+#mainRow{
+  height: 100vh;
+  max-height: 100vh;
+}
+
+#mapContainer{
+ 
+}
+
+#sidebarContent{
+  height: 70vh;
+  max-height: 70vh;
+  overflow: scroll;
+}
 .card{
   margin-right: 5px;
   margin-bottom: 10px;
@@ -51,9 +60,26 @@ body {
 
 .tab-content{
   padding-top: 5px;
-  overflow-y: scroll;
 }
 
 .card-button{
   margin-right: 2px;
+}
+
+@media (max-width: 992px) {
+  #mapContainer{
+    min-height: 50vh;
+  }
+
+  #sidebarContent{
+    height: 40vh;
+    max-height: 40vh;
+    overflow: visible;
+  }
+
+  #sidebar_col{
+    height: 45vh;
+    max-height: 45vh;
+    overflow: scroll;
+  }
 }

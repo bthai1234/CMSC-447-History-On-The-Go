@@ -11,60 +11,64 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'tour_app/mapStyle.css' %}">
   </head>
-  <body>
+  <body class="container-fluid">
     <div id="start-location-marker" style="display:none"> {% static 'tour_app/images/map_home.png' %}</div>
-    <div id="container">
+    <div id="mainRow" class="row overflow-hidden">
+
       <!--displays google maps-->
+      <div id="mapContainer" class="col-lg"> 
         <div id="map"></div>
-      <!--Search Results sidebar-->
-      <div id="sidebar">
-        {% comment %}Profile button and login logout{% endcomment %}
-        <div class="row">
-          <div class="col">
-          {% if user.is_authenticated %}
-            <a href="{% url 'tour_app:profile' %}" class="btn btn-info">Profile</a>
-            <a href="{% url 'tour_app:logout' %}" class="btn btn-warning">Logout</a>
-          {% else %}
-            <a href="{% url 'tour_app:loginPage' %}" class="btn btn-info">Login</a>
-            <a href="{% url 'tour_app:registerPage' %}" class="btn btn-warning">Register</a>  
-          {% endif %}
-          </div>
-        </div>
-        <!--Search box-->
-        <div id ="input_container">
-          <label class ="form-label" for="Figure">Enter a Historical Figure:</label>
-          <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
-          <label class ="form-label" for="address">Enter Address to Search from: </label>
-          <input id="map-input-address" name="address" class="form-control controls" type="text" placeholder="Enter Search Address"/>
-          {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
-          <div>
-            <label class ="form-label" for="radius">Search Radius (km): </label>
-            <select id="map-input-radius" class="form-control" name="radius">
-              <option class="map-input-option" value="5">5</option>
-              <option class="map-input-option" value="10">10</option>
-              <option class="map-input-option" value="25">25</option>
-              <option class="map-input-option" value="50">50</option>
-              <option class="map-input-option" value="100">100</option>
-            </select>
-          </div>
-          <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
-        </div>
-          <ul id="sidebar-tablist" class="nav nav-tabs" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button id="results-tab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#places" type="button" role="tab" aria-controls="places" aria-selected="true">Results</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button id="directions-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#directions" type="button" role="tab" aria-controls="directions" aria-selected="false">Directions</button>
-            </li>
-          </ul>
-          <div class="tab-content" id="sidebarContent">
-            {% csrf_token %}
-            <div id="places" class="tab-pane fade show active places_list" role="tabpanel" aria-labelledby="results-tab"></div>
-            <div id="directions" class="tab-pane fade" role="tabpanel" aria-labelledby="directions-tab"></div>
-          </div>  
-
-
       </div>
+      <!--Search Results sidebar-->
+      <div id="sidebar_col" class="col-lg-2">
+        <div id="sidebar" class="">
+          {% comment %}Profile button and login logout{% endcomment %}
+          <div class="row">
+            <div class="col">
+            {% if user.is_authenticated %}
+              <a href="{% url 'tour_app:profile' %}" class="btn btn-info">Profile</a>
+              <a href="{% url 'tour_app:logout' %}" class="btn btn-warning">Logout</a>
+            {% else %}
+              <a href="{% url 'tour_app:loginPage' %}" class="btn btn-info">Login</a>
+              <a href="{% url 'tour_app:registerPage' %}" class="btn btn-warning">Register</a>  
+            {% endif %}
+            </div>
+          </div>
+          <!--Search box-->
+          <div id ="input_container">
+            <label class ="form-label" for="Figure">Enter a Historical Figure:</label>
+            <input id="map-input-Figure" name="Figure" class="form-control" type="text" placeholder="Enter Historical Figure"/>
+            <label class ="form-label" for="address">Enter Address to Search from: </label>
+            <input id="map-input-address" name="address" class="form-control controls" type="text" placeholder="Enter Search Address"/>
+            {% comment %} <span id="profile"><button id="profile-btn">Profile</button></span> {% endcomment %}
+            <div>
+              <label class ="form-label" for="radius">Search Radius (km): </label>
+              <select id="map-input-radius" class="form-control" name="radius">
+                <option class="map-input-option" value="5">5</option>
+                <option class="map-input-option" value="10">10</option>
+                <option class="map-input-option" value="25">25</option>
+                <option class="map-input-option" value="50">50</option>
+                <option class="map-input-option" value="100">100</option>
+              </select>
+            </div>
+            <input id="searchSubmitButton" class="form-control btn btn-primary mb-3" type="button" value="Search Based on Historical Figure">
+          </div>
+            <ul id="sidebar-tablist" class="nav nav-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button id="results-tab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#places" type="button" role="tab" aria-controls="places" aria-selected="true">Results</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button id="directions-tab" class="nav-link" data-bs-toggle="tab" data-bs-target="#directions" type="button" role="tab" aria-controls="directions" aria-selected="false">Directions</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="sidebarContent">
+              {% csrf_token %}
+              <div id="places" class="tab-pane fade show active places_list" role="tabpanel" aria-labelledby="results-tab"></div>
+              <div id="directions" class="tab-pane fade" role="tabpanel" aria-labelledby="directions-tab"></div>
+            </div>  
+        </div>
+      </div>
+
     </div>
 
     {% load static %}
@@ -73,9 +77,6 @@
       src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&v=weekly"
       
     ></script>
-<<<<<<< HEAD
-  </body>
-=======
     <script src="{% static "tour_app/google_map.js" %}"></script>
     <script>initMap(); </script> 
     <script type="text/javascript">
@@ -91,4 +92,3 @@
       {% endif %}
     </script>
   </body>
->>>>>>> 33770d51e182c0e2b5cabeb3e232b1f49422ee6d
